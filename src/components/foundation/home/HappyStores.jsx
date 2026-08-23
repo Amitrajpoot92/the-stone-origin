@@ -7,28 +7,28 @@ const storeReviews = [
     {
         id: 1,
         storeName: "Sharma Provision Store",
-        location: "Gorakhpur",
+        location: "Pippiganj",
         review: "Gokul snacks are our absolute bestsellers! The packaging is premium, and the taste is always consistent. Customers love it.",
         rating: 5
     },
     {
         id: 2,
         storeName: "Gupta Sweets & Mart",
-        location: "Varanasi",
+        location: "Bhathat",
         review: "Customers specifically ask for Gokul Wafers and Namkeen. Very happy with the timely delivery and great margins.",
         rating: 5
     },
     {
         id: 3,
         storeName: "Daily Needs Supermarket",
-        location: "Lucknow",
+        location: "Siswa Bazar",
         review: "The premium quality of products and exceptional shelf life makes it a perfect fit for our supermarket aisles.",
         rating: 5
     },
     {
         id: 4,
         storeName: "Apna Bazaar",
-        location: "Prayagraj",
+        location: "Paniyara",
         review: "Very professional distributor network. Fresh stock always arrives on time without any hassle. Highly recommended!",
         rating: 5
     }

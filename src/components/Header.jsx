@@ -116,7 +116,7 @@ const Header = () => {
           style={{ backgroundColor: '#27318a' }} 
           className="hidden sm:flex text-white font-medium py-2 px-4 text-center tracking-wide w-full items-center justify-center min-h-[42px] sm:text-[13px] md:text-[15px] leading-tight"
         >
-          <span>Authorized Independent Distributor of Gokul Snacks &bull; Delivery available across Gorakhpur.</span>
+          <span>Authorized Independent Distributor of Gokul Snacks Private Limited &bull; Delivery available across Gorakhpur.</span>
         </div>
 
         {/* Mobile View - Marquee */}
@@ -126,7 +126,7 @@ const Header = () => {
         >
           {/* eslint-disable-next-line jsx-a11y/no-distracting-elements */}
           <marquee scrollamount="4" className="w-full">
-            Authorized Independent Distributor of Gokul Snacks &bull; Delivery available across Gorakhpur.
+            Authorized Independent Distributor of Gokul Snacks Private Limited &bull; Delivery available across Gorakhpur.
           </marquee>
         </div>
 

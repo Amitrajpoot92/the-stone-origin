@@ -33,14 +33,17 @@ const valuesData = [
 const certificatesData = [
     {
         title: "FSSAI Certificate",
+        number: "12725033000036",
         url: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Fassai.pdf"
     },
     {
         title: "GST Certificate",
+        number: "09CJBPJ5715R1ZN",
         url: "https://ik.imagekit.io/gokulgorakhpur/Gokul/GST.pdf"
     },
     {
         title: "Udyam Certificate",
+        number: "UDYAM-UP-51-0002195",
         url: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Neha%20jaiswal%20Udyam%20Certificate.pdf"
     }
 ];
@@ -59,13 +62,13 @@ const AboutUs = () => {
                 {/* Mobile View Banner */}
                 <img 
                     src="https://ik.imagekit.io/gokulgorakhpur/Gokul/Aboutus_BannerPhone.webp" 
-                    alt="About Gokul Snacks Phone" 
+                    alt="About Gokul Snacks Private Limited Phone" 
                     className="w-full h-auto block sm:hidden object-cover"
                 />
                 {/* Desktop/Laptop View Banner */}
                 <img 
                     src="https://ik.imagekit.io/gokulgorakhpur/Gokul/Aboutus.webp" 
-                    alt="About Gokul Snacks Laptop" 
+                    alt="About Gokul Snacks Private Limited Laptop" 
                     className="w-full max-h-[450px] hidden sm:block object-cover object-center"
                 />
                 
@@ -126,7 +129,7 @@ const AboutUs = () => {
                         <div className="relative z-10 rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-4 border-white bg-amber-50">
                             <img 
                                 src="https://ik.imagekit.io/gokulgorakhpur/Gokul/About_us-01.webp" 
-                                alt="Handcrafted Gokul Snacks" 
+                                alt="Handcrafted Gokul Snacks Private Limited" 
                                 className="w-full h-auto block"
                             />
                         </div>
@@ -267,22 +270,21 @@ const AboutUs = () => {
 
                         <div className="space-y-4 text-slate-600 font-medium text-base sm:text-lg leading-relaxed mb-10">
                             <p>
-                                Gokul lives up to its reputation for manufacturing premium quality namkeens. We maintain the highest standards and hygiene in production giving us an edge over other brands. We offer the best quality namkeen wrapped in industry-grade packets. Our products contain the traditional authentic taste of namkeens.
-                            </p>
-                            <p className="font-bold text-[#333333]">
-                                We have the highest standard of Food Certifications like ISO 22000.
+                                At Gokul Snacks, we strictly abide by hygiene norms. Our certifications include HALAL, ISO22000, RUCO, HACCP, USFDA and BRC. Our setup is equipped with an advanced laboratory. The quality lab is well equipped with all the latest equipment for analysis and testing of the products.
                             </p>
                         </div>
 
                         {/* Certification Badges */}
-                        <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8 pt-6 border-t border-slate-100">
-                            <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-200 text-[#27318a] font-bold text-sm shadow-xs">
-                                <Award size={18} className="text-amber-500" />
-                                <span>ISO 22000 Certified</span>
-                            </div>
-                            <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-200 text-[#27318a] font-bold text-sm shadow-xs">
-                                <CheckCircle2 size={18} className="text-emerald-500" />
-                                <span>100% Hygienic Automated Plant</span>
+                        <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 pt-6 border-t border-slate-100">
+                            {["HALAL", "ISO 22000", "RUCO", "HACCP", "USFDA", "BRC"].map((cert, index) => (
+                                <div key={index} className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-[#27318a] font-bold text-xs sm:text-sm shadow-xs">
+                                    <Award size={16} className="text-amber-500" />
+                                    <span>{cert}</span>
+                                </div>
+                            ))}
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-[#27318a] font-bold text-xs sm:text-sm shadow-xs">
+                                <CheckCircle2 size={16} className="text-emerald-500" />
+                                <span>Advanced Testing Lab</span>
                             </div>
                         </div>
 
@@ -311,40 +313,24 @@ const AboutUs = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: idx * 0.1, duration: 0.5 }}
-                                className="bg-white rounded-3xl overflow-hidden shadow-lg border border-slate-100 flex flex-col group hover:shadow-2xl transition-all duration-300"
+                                className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-100/50 border border-slate-100 flex flex-col items-center text-center hover:shadow-2xl transition-all duration-300 group relative overflow-hidden"
                             >
-                                <div className="p-6 bg-[#27318a] text-center flex items-center justify-between">
-                                    <h3 className="font-bold text-white text-lg sm:text-xl tracking-wide text-left flex-1">
-                                        {cert.title}
-                                    </h3>
-                                    <a 
-                                        href={cert.url} 
-                                        target="_blank" 
-                                        rel="noreferrer" 
-                                        className="bg-white/10 hover:bg-[#fce513] hover:text-[#27318a] text-white p-2.5 rounded-full transition-colors flex items-center justify-center shrink-0" 
-                                        title="View Fullscreen"
-                                    >
-                                        <ExternalLink size={20} />
-                                    </a>
+                                <div className="absolute top-0 left-0 w-full h-2 bg-[#27318a] group-hover:bg-[#fce513] transition-colors" />
+                                
+                                <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                    <Award size={36} className="text-[#27318a]" />
                                 </div>
-                                <div className="relative w-full h-[400px] sm:h-[500px] bg-slate-50">
-                                    <object 
-                                        data={cert.url} 
-                                        type="application/pdf"
-                                        className="w-full h-full"
-                                    >
-                                        <div className="flex flex-col items-center justify-center h-full p-6 text-center text-slate-500">
-                                            <p className="mb-4 text-sm font-bold">Your browser does not support embedded PDFs.</p>
-                                            <a 
-                                                href={cert.url} 
-                                                target="_blank" 
-                                                rel="noreferrer"
-                                                className="bg-[#27318a] text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-[#fce513] hover:text-[#27318a] transition-colors"
-                                            >
-                                                Open Certificate
-                                            </a>
-                                        </div>
-                                    </object>
+                                
+                                <h3 className="font-bold text-[#333333] text-lg sm:text-xl mb-3 tracking-tight">
+                                    {cert.title}
+                                </h3>
+                                
+                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                                    Registration No.
+                                </p>
+                                
+                                <div className="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs sm:text-sm font-bold text-slate-700 tracking-wide break-all max-w-full">
+                                    {cert.number}
                                 </div>
                             </motion.div>
                         ))}

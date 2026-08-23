@@ -63,7 +63,7 @@ export const generateInvoice = async (order) => {
     doc.setFontSize(8);
     doc.setTextColor(80, 80, 80);
     doc.text('Shop No 03, Sanjay Tripathi C/o Om Prakash Tripathi', 52, 33);
-    doc.text('Near Bhathat Bazar, Piprapati, Katrari Police Station', 52, 37);
+    doc.text('Near Piprapati, Katrari Police Station', 52, 37);
     doc.text('Bhathat, Gorakhpur, Uttar Pradesh - 273306', 52, 41);
     doc.setFont('helvetica', 'bold');
     doc.text('Phone: +91 8000668955 | Email: gokulgorakhpur26@gmail.com', 52, 45);

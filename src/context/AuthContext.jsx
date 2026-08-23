@@ -13,7 +13,7 @@ import { ref, update, get } from 'firebase/database';
 import Loader from '../components/common/Loader';
 
 
-const adminEmails = ['meraj786@gmail.com', 'gokulgorakhpur26@gmail.com', 'admin@gmail.com'];
+const adminEmails = ['gokulgorakhpur26@gmail.com', 'admin@gmail.com'];
 
 export const isAdminEmail = (email) => {
     if (!email) return false;

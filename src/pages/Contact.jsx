@@ -31,29 +31,34 @@ const Contact = () => {
     const contactMethods = [
         {
             icon: <MapPin size={28} className="text-[#27318a]" />,
-            title: "Visit Our Branches",
+            title: "Office Address",
             details: [
-                "Branch 1: Main Market, Pippiganj, Gorakhpur - 273165, UP.",
-                "Branch 2: Main Road, Bhathat, Gorakhpur - 273306, UP."
+                "Shop No 03, Sanjay Tripathi C/o Om Prakash Tripathi,",
+                "Near Piprapati, Katrari Police Station,",
+                "Bhathat, Gorakhpur, Uttar Pradesh - 273306"
             ],
             color: "bg-blue-50"
         },
         {
+            icon: <MapPin size={28} className="text-[#27318a]" />,
+            title: "Our Branches",
+            details: [
+                "Branch 1: Bhathat Gorakhpur 273306",
+                "Branch 2: Pippiganj Gorakhpur 273165",
+                "Branch 3: Siswa Bazar Nichlaul Maharajganj 273163",
+                "Branch 4: Paniyara Maharajganj 273310"
+            ],
+            color: "bg-emerald-50"
+        },
+        {
             icon: <PhoneCall size={28} className="text-[#27318a]" />,
-            title: "Call Us",
+            title: "Call & Email Us",
             details: [
                 "Customer Care: +91 8000668955",
+                "Email: gokulgorakhpur26@gmail.com",
                 "Available Mon-Sat, 9AM to 8PM"
             ],
             color: "bg-amber-50"
-        },
-        {
-            icon: <Mail size={28} className="text-[#27318a]" />,
-            title: "Email Us",
-            details: [
-                "gokulgorakhpur26@gmail.com"
-            ],
-            color: "bg-emerald-50"
         }
     ];
 

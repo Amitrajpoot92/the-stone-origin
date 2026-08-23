@@ -19,7 +19,7 @@ const Footer = () => {
                             />
                         </Link>
                         <p className="text-[#333333] text-sm leading-relaxed mb-8 font-medium">
-                            <strong>Neha Enterprises</strong> is an Authorized Independent Distributor of Gokul Snacks. We specialize in delivering fresh, handcrafted Namkeen, Snacks, Wafers, and Bakery items across Gorakhpur.
+                            <strong>Neha Enterprises</strong> is an Authorized Independent Distributor of Gokul Snacks Private Limited. We specialize in delivering fresh, handcrafted Namkeen, Snacks, Wafers, and Bakery items across Gorakhpur.
                         </p>
                         
                         {/* Social Icons */}
@@ -68,19 +68,24 @@ const Footer = () => {
                         <h3 style={{ fontFamily: "'Recoleta', Georgia, serif" }} className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-6">
                             Contact
                         </h3>
-                        <ul className="flex flex-col gap-5">
-                            <li className="flex items-start gap-3 text-sm text-[#333333] font-medium leading-relaxed">
+                        <ul className="flex flex-col gap-4">
+                            <li className="flex items-start gap-3 text-xs sm:text-sm text-[#333333] font-medium leading-relaxed">
                                 <MapPin size={18} className="text-[#27318a] shrink-0 mt-0.5" />
                                 <span>
-                                    <strong>Branch 1:</strong> Main Market, Pippiganj,<br />
-                                    Gorakhpur - 273165, UP.
+                                    <strong>Office Address:</strong><br />
+                                    Shop No 03, Sanjay Tripathi C/o Om Prakash Tripathi, Near Piprapati, Katrari Police Station, Bhathat, Gorakhpur - 273306, UP.
                                 </span>
                             </li>
-                            <li className="flex items-start gap-3 text-sm text-[#333333] font-medium leading-relaxed">
+                            <li className="flex items-start gap-3 text-xs sm:text-sm text-[#333333] font-medium leading-relaxed">
                                 <MapPin size={18} className="text-[#27318a] shrink-0 mt-0.5" />
                                 <span>
-                                    <strong>Branch 2:</strong> Main Road, Bhathat,<br />
-                                    Gorakhpur - 273306, UP.
+                                    <strong>Branches:</strong>
+                                    <ul className="list-disc list-inside mt-1 space-y-1 text-xs">
+                                        <li>Branch 1: Bhathat Gorakhpur 273306</li>
+                                        <li>Branch 2: Pippiganj Gorakhpur 273165</li>
+                                        <li>Branch 3: Siswa Bazar Nichlaul Maharajganj 273163</li>
+                                        <li>Branch 4: Paniyara Maharajganj 273310</li>
+                                    </ul>
                                 </span>
                             </li>
                             <li className="flex items-center gap-3 text-sm text-[#333333] font-medium">
@@ -128,7 +133,7 @@ const Footer = () => {
             <div className="bg-[#1a1a1a] py-6">
                 <div className="max-w-[1440px] mx-auto px-6 flex flex-col items-center text-center gap-3">
                     <p className="text-white/70 text-[11px] sm:text-xs font-medium max-w-4xl leading-relaxed">
-                        <strong>Disclaimer:</strong> This website is operated by an Authorized Independent Distributor of Gokul Snacks. All brand names, logos, and trademarks (including "Gokul") are the property of their respective owners. This platform is solely for the distribution and supply of products in the designated region and does not claim to be the official parent company's website.
+                        <strong>Disclaimer:</strong> This website is operated by an Authorized Independent Distributor of Gokul Snacks Private Limited. All brand names, logos, and trademarks (including "Gokul") are the property of their respective owners. This platform is solely for the distribution and supply of products in the designated region and does not claim to be the official parent company's website.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-2">
                         <p className="text-[#fce513] text-xs sm:text-sm font-semibold tracking-wide">
