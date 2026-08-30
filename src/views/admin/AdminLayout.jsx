@@ -125,12 +125,8 @@ const AdminLayout = ({children}) => {
             <aside className="hidden lg:flex flex-col w-64 bg-slate-900 border-r border-white/5 sticky top-0 h-screen overflow-y-auto">
                 <div className="p-6 border-b border-white/5">
                     <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate.push('/')}>
-                        <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.2)] group-hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] transition-all">
-                            <Smartphone size={20} strokeWidth={2.5} />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-black text-white tracking-tight leading-none">24mobiles</h2>
-                            <p className="text-[9px] font-bold text-amber-500 uppercase tracking-widest mt-1">Admin Panel</p>
+                        <div className="flex items-center gap-3">
+                            <img src="/phones/24Mobiles-logo.png" alt="24mobiles Admin" className="h-10 object-contain filter invert opacity-90" />
                         </div>
                     </div>
                 </div>
@@ -169,10 +165,7 @@ const AdminLayout = ({children}) => {
             {/* ====== Mobile Header & Sidebar ====== */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-white/5 z-50 flex items-center justify-between px-4">
                 <div className="flex items-center gap-2" onClick={() => navigate.push('/')}>
-                    <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-slate-900">
-                        <Smartphone size={16} strokeWidth={2.5} />
-                    </div>
-                    <span className="text-lg font-black text-white tracking-tight">24mobiles Admin</span>
+                    <img src="/phones/24Mobiles-logo.png" alt="24mobiles Admin" className="h-8 object-contain filter invert opacity-90" />
                 </div>
                 <button 
                     onClick={() => setIsSidebarOpen(true)}
@@ -201,13 +194,7 @@ const AdminLayout = ({children}) => {
                         >
                             <div className="p-4 border-b border-white/5 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-900">
-                                        <Smartphone size={20} strokeWidth={2.5} />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-lg font-black text-white leading-none">24mobiles</h2>
-                                        <p className="text-[9px] font-bold text-amber-500 uppercase tracking-widest mt-1">Admin</p>
-                                    </div>
+                                    <img src="/phones/24Mobiles-logo.png" alt="24mobiles Admin" className="h-10 object-contain filter invert opacity-90" />
                                 </div>
                                 <button 
                                     onClick={() => setIsSidebarOpen(false)}

@@ -2,15 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Star, ChevronRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { db } from '../../firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
 
 const ProductCard = ({ product }) => {
     const navigate = useRouter();
+    const searchParams = useSearchParams();
     const [realReviews, setRealReviews] = useState([]);
 
+    const compareTarget = searchParams ? searchParams.get('compareTarget') : null;
+    let targetHref = `/product/${product.id}`;
+    if (compareTarget === 'phone1') {
+        const phone2 = searchParams ? searchParams.get('phone2') : null;
+        targetHref = `/compare?phone1=${product.id}${phone2 ? `&phone2=${phone2}` : ''}`;
+    } else if (compareTarget === 'phone2') {
+        const phone1 = searchParams ? searchParams.get('phone1') : null;
+        targetHref = `/compare?phone2=${product.id}${phone1 ? `&phone1=${phone1}` : ''}`;
+    }
+    
     useEffect(() => {
         if (!product?.id) return;
         const reviewsRef = collection(db, 'reviews', product.id, 'list');
@@ -33,7 +44,7 @@ const ProductCard = ({ product }) => {
             <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl p-2 sm:p-6 border border-slate-100 hover:border-amber-500/50 shadow-sm hover:shadow-xl transition-all cursor-pointer h-full relative overflow-hidden text-center">
 
                 <Link
-                    href={`/product/${product.id}`}
+                    href={targetHref}
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     className="flex flex-col flex-grow"
                 >
@@ -66,7 +77,7 @@ const ProductCard = ({ product }) => {
                 {/* Product Info */}
                 <div className="space-y-1.5 sm:space-y-4 mt-auto">
                     {/* Name */}
-                    <Link href={`/product/${product.id}`}>
+                    <Link href={targetHref}>
                         <h4 className="text-[10px] sm:text-base font-black text-slate-900 leading-tight line-clamp-2 sm:truncate px-0.5 group-hover:text-amber-600 transition-colors h-[28px] sm:h-auto flex items-center justify-center">
                             {product.name}
                         </h4>
@@ -101,11 +112,11 @@ const ProductCard = ({ product }) => {
                         </div>
                         
                         <Link 
-                            href={`/product/${product.id}`}
+                            href={targetHref}
                             className="w-full py-1.5 sm:py-3.5 bg-slate-900 text-white rounded-lg sm:rounded-xl flex items-center justify-center gap-1 sm:gap-2 hover:bg-amber-500 hover:text-slate-900 transition-all shadow-sm sm:shadow-lg active:scale-95 font-black text-[7px] sm:text-[10px] uppercase tracking-widest group/btn"
                         >
-                            <span className="hidden sm:inline">View Specs</span>
-                            <span className="sm:hidden">Specs</span>
+                            <span className="hidden sm:inline">{compareTarget ? "Select to Compare" : "View Specs"}</span>
+                            <span className="sm:hidden">{compareTarget ? "Select" : "Specs"}</span>
                             <ChevronRight size={10} strokeWidth={3} className="sm:w-[14px] sm:h-[14px] group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
                     </div>

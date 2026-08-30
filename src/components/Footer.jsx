@@ -38,14 +38,8 @@ const Footer = () => {
                     {/* ====== Column 1: Brand & About ====== */}
                     <div className="flex flex-col pr-0 lg:pr-4">
                         <Link href="/" className="inline-block mb-4 sm:mb-6">
-                            <div className="flex items-center gap-3 group/logo cursor-pointer">
-                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-                                    <Smartphone size={24} strokeWidth={2.5} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xl md:text-2xl font-black tracking-tight leading-none text-slate-900">24mobiles</span>
-                                    <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest mt-1">Independent Reviews</span>
-                                </div>
+                            <div className="flex items-center cursor-pointer">
+                                <img src="/phones/24Mobiles-logo.png" alt="24mobiles Logo" className="h-10 md:h-12 object-contain" />
                             </div>
                         </Link>
                         <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 font-medium">

@@ -23,7 +23,7 @@ const Loader = () => {
         className="w-40 h-40 rounded-full overflow-hidden mb-8 bg-white border-4 border-slate-50 flex items-center justify-center"
       >
         <img 
-          src="https://ik.imagekit.io/gokulgorakhpur/Gokul/newlogo.jpeg" 
+          src="/phones/24Mobiles-logo.png" 
           alt="Loading..."
           className="w-full h-full object-contain"
         />

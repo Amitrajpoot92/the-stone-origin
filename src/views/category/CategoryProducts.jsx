@@ -203,7 +203,9 @@ const CategoryProducts = () => {
                 {/* ====== Products Grid ====== */}
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-16 sm:py-32">
-                        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-4 border-amber-500 border-t-transparent shadow-lg mb-4"></div>
+                        <div className="w-32 h-16 sm:w-40 sm:h-20 mb-4 animate-pulse">
+                            <img src="/phones/24Mobiles-logo.png" alt="Loading" className="w-full h-full object-contain" />
+                        </div>
                         <span className="text-amber-600 text-[10px] sm:text-xs font-bold uppercase tracking-widest animate-pulse">
                             Loading Phones...
                         </span>

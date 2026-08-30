@@ -80,9 +80,11 @@ const Categories = ({ isHome = false }) => {
 
     if (isLoading) {
         return (
-            <div className="min-h-[50vh] bg-slate-50 flex flex-col items-center justify-center p-4 font-['Montserrat',sans-serif]">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500 mb-4"></div>
-                <p className="text-slate-500 font-black uppercase tracking-widest text-[10px]">Loading Brands...</p>
+            <div className="flex flex-col items-center justify-center min-h-[50vh]">
+                <div className="w-32 h-16 mb-4 animate-pulse">
+                     <img src="/phones/24Mobiles-logo.png" alt="Loading" className="w-full h-full object-contain" />
+                </div>
+                <span className="text-amber-600 font-bold uppercase tracking-widest text-sm animate-pulse">Loading Brands...</span>
             </div>
         );
     }

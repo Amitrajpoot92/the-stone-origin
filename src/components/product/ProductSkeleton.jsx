@@ -14,7 +14,9 @@ const ProductSkeleton = () => {
           {/* Left Side: Image Skeleton */}
           <div className="space-y-8">
             <div className="aspect-square bg-slate-50 rounded-[3rem] border border-slate-100 flex items-center justify-center overflow-hidden p-12">
-              <div className="w-2/3 h-2/3 bg-slate-100 rounded-3xl animate-pulse" />
+              <div className="w-1/2 h-1/2 flex items-center justify-center animate-pulse opacity-40">
+                 <img src="/phones/24Mobiles-logo.png" alt="Loading" className="w-full h-full object-contain filter grayscale" />
+              </div>
             </div>
             
             {/* Trust Badges Skeleton */}

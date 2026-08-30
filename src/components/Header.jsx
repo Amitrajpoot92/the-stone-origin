@@ -4,10 +4,6 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Home, Smartphone, Tags, Scale, Info, User, Search, X, ChevronRight } from 'lucide-react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import throttle from 'lodash/throttle';
-import AccountSidebar from './common/sidebar';
-import UserAvatar from './common/UserAvatar';
-import AuthModal from '../views/auth/AuthModal';
-import { useAuth } from '../context/AuthContext';
 
 import { db } from '../firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -15,8 +11,6 @@ import { collection, onSnapshot } from 'firebase/firestore';
 const Header = () => {
   const navigate = useRouter();
   const location = { pathname: usePathname(), search: useSearchParams().toString() };
-  const { user, isAuthModalOpen, authView, openAuthModal, closeAuthModal } = useAuth();
-  
   const { scrollY } = useScroll();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,7 +18,6 @@ const Header = () => {
   
   const isHomePage = location.pathname === '/';
   const isSolid = isScrolled || !isHomePage;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -117,16 +110,10 @@ const Header = () => {
             {/* Logo */}
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="flex items-center cursor-pointer shrink-0 gap-3 group/logo"
+              className="flex items-center cursor-pointer shrink-0"
               onClick={() => navigate.push('/')}
             >
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(245,158,11,0.3)] group-hover/logo:shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all">
-                  <Smartphone size={20} strokeWidth={2.5} />
-              </div>
-              <div className="flex flex-col">
-                  <span className={`text-lg md:text-xl font-black tracking-tight leading-none ${isSolid ? 'text-slate-900' : 'text-slate-900'}`}>24mobiles</span>
-                  <span className="text-[8px] font-bold text-amber-600 uppercase tracking-widest mt-0.5">Independent Reviews</span>
-              </div>
+              <img src="/phones/24Mobiles-logo.png" alt="24mobiles Logo" className="h-8 md:h-10 object-contain" />
             </motion.div>
 
             {/* Desktop Navigation Links */}
@@ -233,45 +220,12 @@ const Header = () => {
                 </AnimatePresence>
               </div>
 
-              {/* User Profile / Auth Icon */}
-              <div className="flex items-center">
-                {!user ? (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => openAuthModal('login')}
-                    className="p-2 text-slate-600 hover:text-amber-600 hover:bg-slate-100 rounded-full transition-all"
-                    title="Login"
-                  >
-                    <User size={20} strokeWidth={2.5} />
-                  </motion.button>
-                ) : (
-                  <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="shrink-0 ring-2 rounded-full transition-transform hover:scale-105 ring-amber-500/50 hover:ring-amber-500 ml-2 shadow-sm"
-                    title="My Account"
-                  >
-                    <UserAvatar name={user.name} size="sm" />
-                  </button>
-                )}
-              </div>
 
             </div>
           </div>
         </div>
       </motion.header>
 
-      {/* Modals & Sidebars */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={closeAuthModal}
-        initialView={authView}
-      />
-
-      <AccountSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
 
       {/* Mobile Bottom Navigation Bar */}
       <motion.nav
