@@ -1,10 +1,11 @@
+"use client";
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, CheckCircle2, X } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
+
 
 const ToastContainer = () => {
-    const { notifications } = useCart();
+    const notifications = [];
 
     return (
         <div className="fixed top-24 right-4 sm:right-8 z-[200] pointer-events-none flex flex-col gap-3 w-full max-w-[400px]">

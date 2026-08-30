@@ -1,36 +1,66 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Youtube, ArrowRight, MapPin, Mail, PhoneCall } from 'lucide-react';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+
+import { Facebook, Instagram, Twitter, Youtube, ArrowRight, MapPin, Mail, PhoneCall, Smartphone } from 'lucide-react';
 
 const Footer = () => {
+    const [contactSettings, setContactSettings] = useState({
+        contactAddress: 'Shop No 03, Sanjay Tripathi C/o Om Prakash Tripathi, Near Piprapati, Katrari Police Station, Bhathat, Gorakhpur - 273306, UP.',
+        contactEmail: 'contact@24mobiles.com',
+        contactPhone: '+91 8000668955'
+    });
+
+    useEffect(() => {
+        const settingsRef = doc(db, 'store', 'settings');
+        const unsubscribe = onSnapshot(settingsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.data();
+                setContactSettings(prev => ({
+                    contactAddress: data.contactAddress || prev.contactAddress,
+                    contactEmail: data.contactEmail || prev.contactEmail,
+                    contactPhone: data.contactPhone || prev.contactPhone
+                }));
+            }
+        }, (error) => {
+            console.error("Error fetching footer settings:", error);
+        });
+        
+        return () => unsubscribe();
+    }, []);
+
     return (
-        <footer className="bg-[#fce513] pt-16 sm:pt-20 font-['Montserrat',sans-serif] border-t border-[#f2d800]">
-            <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pb-12 sm:pb-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+        <footer className="bg-white pt-8 sm:pt-20 font-['Montserrat',sans-serif] border-t border-slate-200">
+            <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 pb-6 sm:pb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 lg:gap-8">
                     
                     {/* ====== Column 1: Brand & About ====== */}
                     <div className="flex flex-col pr-0 lg:pr-4">
-                        <Link to="/" className="inline-block mb-6">
-                            <img 
-                                src="https://ik.imagekit.io/gokulgorakhpur/Gokul/newlogo.jpeg" 
-                                alt="Neha Enterprises" 
-                                className="h-16 w-auto object-contain mix-blend-multiply"
-                            />
+                        <Link href="/" className="inline-block mb-4 sm:mb-6">
+                            <div className="flex items-center gap-3 group/logo cursor-pointer">
+                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+                                    <Smartphone size={24} strokeWidth={2.5} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xl md:text-2xl font-black tracking-tight leading-none text-slate-900">24mobiles</span>
+                                    <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest mt-1">Independent Reviews</span>
+                                </div>
+                            </div>
                         </Link>
-                        <p className="text-[#333333] text-sm leading-relaxed mb-8 font-medium">
-                            <strong>Neha Enterprises</strong> is an Authorized Independent Distributor of Gokul Snacks Private Limited. We specialize in delivering fresh, handcrafted Namkeen, Snacks, Wafers, and Bakery items across Gorakhpur.
+                        <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 font-medium">
+                            <strong>24mobiles</strong> is your ultimate destination for unbiased smartphone reviews, detailed specifications, and expert buying guides. We help you make the right choice for your next device.
                         </p>
                         
                         {/* Social Icons */}
                         <div className="flex items-center gap-3">
-                            {[Facebook, Instagram, Linkedin, Youtube].map((Icon, idx) => (
+                            {[Facebook, Instagram, Twitter, Youtube].map((Icon, idx) => (
                                 <a 
                                     key={idx} 
                                     href="#" 
-                                    className="w-9 h-9 rounded-full bg-[#1a1a1a] text-[#fce513] flex items-center justify-center hover:bg-[#27318a] hover:text-white transition-colors duration-300 shadow-sm"
+                                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-50 border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-amber-500 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm"
                                 >
-                                    <Icon size={16} />
+                                    <Icon size={14} className="sm:w-4 sm:h-4" />
                                 </a>
                             ))}
                         </div>
@@ -38,24 +68,24 @@ const Footer = () => {
 
                     {/* ====== Column 2: Important Links ====== */}
                     <div className="flex flex-col">
-                        <h3 style={{ fontFamily: "'Recoleta', Georgia, serif" }} className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-6">
-                            Important Links
+                        <h3 className="text-base sm:text-lg font-black text-slate-900 mb-3 sm:mb-6 uppercase tracking-widest">
+                            Quick Links
                         </h3>
-                        <ul className="flex flex-col gap-3.5">
+                        <ul className="flex flex-col gap-2.5 sm:gap-3.5">
                             {[
                                 { name: 'Home', path: '/' },
-                                { name: 'All Products', path: '/products' },
-                                { name: 'Categories', path: '/categories' },
-                                { name: 'My Orders', path: '/orders' },
+                                { name: 'All Phones', path: '/products' },
+                                { name: 'Brands', path: '/categories' },
+                                { name: 'Compare', path: '/compare' },
                                 { name: 'About Us', path: '/about' },
                                 { name: 'Contact Us', path: '/contact' },
                             ].map((link, idx) => (
                                 <li key={idx}>
                                     <Link 
-                                        to={link.path} 
-                                        className="text-[#333333] text-sm font-medium hover:text-[#27318a] hover:font-bold transition-all duration-200 flex items-center gap-2 group"
+                                        href={link.path} 
+                                        className="text-slate-600 text-xs sm:text-sm font-medium hover:text-amber-600 transition-all duration-200 flex items-center gap-2 group"
                                     >
-                                        <span className="w-1.5 h-1.5 rounded-full bg-[#27318a] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                                         {link.name}
                                     </Link>
                                 </li>
@@ -63,88 +93,51 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* ====== Column 3: Contact Info (Gorakhpur Specific) ====== */}
+                    {/* ====== Column 3: Contact Info ====== */}
                     <div className="flex flex-col">
-                        <h3 style={{ fontFamily: "'Recoleta', Georgia, serif" }} className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-6">
-                            Contact
+                        <h3 className="text-base sm:text-lg font-black text-slate-900 mb-3 sm:mb-6 uppercase tracking-widest">
+                            Contact Us
                         </h3>
-                        <ul className="flex flex-col gap-4">
-                            <li className="flex items-start gap-3 text-xs sm:text-sm text-[#333333] font-medium leading-relaxed">
-                                <MapPin size={18} className="text-[#27318a] shrink-0 mt-0.5" />
+                        <ul className="flex flex-col gap-3 sm:gap-4">
+                            <li className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                                <MapPin size={16} className="text-amber-500 shrink-0 mt-0.5 sm:w-[18px] sm:h-[18px]" />
                                 <span>
-                                    <strong>Office Address:</strong><br />
-                                    Shop No 03, Sanjay Tripathi C/o Om Prakash Tripathi, Near Piprapati, Katrari Police Station, Bhathat, Gorakhpur - 273306, UP.
+                                    <strong>24mobiles Headquarters:</strong><br />
+                                    {contactSettings.contactAddress}
                                 </span>
                             </li>
-                            <li className="flex items-start gap-3 text-xs sm:text-sm text-[#333333] font-medium leading-relaxed">
-                                <MapPin size={18} className="text-[#27318a] shrink-0 mt-0.5" />
-                                <span>
-                                    <strong>Branches:</strong>
-                                    <ul className="list-disc list-inside mt-1 space-y-1 text-xs">
-                                        <li>Branch 1: Bhathat Gorakhpur 273306</li>
-                                        <li>Branch 2: Pippiganj Gorakhpur 273165</li>
-                                        <li>Branch 3: Siswa Bazar Nichlaul Maharajganj 273163</li>
-                                        <li>Branch 4: Paniyara Maharajganj 273310</li>
-                                    </ul>
-                                </span>
-                            </li>
-                            <li className="flex items-center gap-3 text-sm text-[#333333] font-medium">
-                                <Mail size={16} className="text-[#27318a] shrink-0" />
-                                <a href="mailto:gokulgorakhpur26@gmail.com" className="hover:text-[#27318a] transition-colors">
-                                    gokulgorakhpur26@gmail.com
+                            <li className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-slate-600 font-medium mt-1 sm:mt-2">
+                                <Mail size={14} className="text-amber-500 shrink-0 sm:w-4 sm:h-4" />
+                                <a href={`mailto:${contactSettings.contactEmail}`} className="hover:text-amber-600 transition-colors">
+                                    {contactSettings.contactEmail}
                                 </a>
                             </li>
-                            <li className="flex items-center gap-3 text-sm text-[#333333] font-medium">
-                                <PhoneCall size={16} className="text-[#27318a] shrink-0" />
-                                <span>Customer Care: +91 8000668955</span>
+                            <li className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-slate-600 font-medium mt-1 sm:mt-2">
+                                <PhoneCall size={14} className="text-amber-500 shrink-0 sm:w-4 sm:h-4" />
+                                <span>Press & Business: {contactSettings.contactPhone}</span>
                             </li>
                         </ul>
-                    </div>
-
-                    {/* ====== Column 4: Newsletter ====== */}
-                    <div className="flex flex-col">
-                        <h3 style={{ fontFamily: "'Recoleta', Georgia, serif" }} className="text-xl sm:text-2xl font-bold text-[#1a1a1a] mb-6">
-                            Subscribe Our Newsletter
-                        </h3>
-                        <p className="text-[#333333] text-sm font-medium mb-6">
-                            Get the latest updates on new snacks and exclusive distributor offers directly in your inbox.
-                        </p>
-                        
-                        <form className="relative w-full group" onSubmit={(e) => e.preventDefault()}>
-                            <input 
-                                type="email" 
-                                placeholder="Enter email here" 
-                                className="w-full bg-transparent border-b-2 border-[#1a1a1a] py-2.5 pr-10 text-sm text-[#1a1a1a] placeholder-[#333333]/70 focus:outline-none focus:border-[#27318a] transition-colors font-medium"
-                                required
-                            />
-                            <button 
-                                type="submit" 
-                                className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-[#1a1a1a] group-hover:text-[#27318a] transition-colors"
-                            >
-                                <ArrowRight size={18} strokeWidth={2.5} />
-                            </button>
-                        </form>
                     </div>
 
                 </div>
             </div>
 
             {/* ====== Bottom Copyright Bar & Legal Disclaimer ====== */}
-            <div className="bg-[#1a1a1a] py-6">
-                <div className="max-w-[1440px] mx-auto px-6 flex flex-col items-center text-center gap-3">
-                    <p className="text-white/70 text-[11px] sm:text-xs font-medium max-w-4xl leading-relaxed">
-                        <strong>Disclaimer:</strong> This website is operated by an Authorized Independent Distributor of Gokul Snacks Private Limited. All brand names, logos, and trademarks (including "Gokul") are the property of their respective owners. This platform is solely for the distribution and supply of products in the designated region and does not claim to be the official parent company's website.
+            <div className="bg-slate-50 py-4 sm:py-6 border-t border-slate-200">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex flex-col items-center text-center gap-2 sm:gap-3">
+                    <p className="text-slate-500 text-[9px] sm:text-[11px] font-medium max-w-4xl leading-relaxed">
+                        <strong>Affiliate Disclosure:</strong> 24mobiles provides independent smartphone reviews and specifications. We may earn an affiliate commission when you purchase through links on our site. This helps support our research and content creation. All product names, logos, and brands are property of their respective owners.
                     </p>
-                    <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-2">
-                        <p className="text-[#fce513] text-xs sm:text-sm font-semibold tracking-wide">
-                            Copyright &copy; {new Date().getFullYear()} Neha Enterprises (Independent Distributor). All Rights Reserved.
+                    <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-6 mt-2 sm:mt-4">
+                        <p className="text-slate-500 text-[10px] sm:text-xs font-bold tracking-wide">
+                            Copyright &copy; {new Date().getFullYear()} 24mobiles. All Rights Reserved.
                         </p>
-                        <a 
-                            href="https://www.gokulnamkeengorakhpur.in/admin/login" 
-                            className="text-white/40 hover:text-[#fce513] text-[10px] sm:text-xs font-medium transition-colors border border-white/10 hover:border-[#fce513]/50 px-3 py-1 rounded-full"
+                        <Link 
+                            href="/admin/login" 
+                            className="text-slate-400 hover:text-amber-500 text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-colors"
                         >
                             Admin Login
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

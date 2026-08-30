@@ -1,92 +1,65 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useRouter, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Heart, Minus, Plus, ArrowLeft, Star, ShieldCheck, Truck, RefreshCw, Share2 } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { 
+    ArrowLeft, Star, Share2, ShieldCheck, Zap, Battery, Camera, Cpu, 
+    CheckCircle2, XCircle, ChevronRight, ExternalLink, Activity, HardDrive, Smartphone
+} from 'lucide-react';
+import { db } from '../../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+
 import ShareModal from '../common/ShareModal';
 import RecommendedProducts from './RecommendedProducts';
 import ProductSkeleton from './ProductSkeleton';
-import { realtimeDb as db } from '../../firebase';
-import { ref, onValue } from 'firebase/database';
-
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
-    const { addToCart, addNotification } = useCart();
-    const { user, openAuthModal } = useAuth();
+    const navigate = useRouter();
 
     const [product, setProduct] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [quantity, setQuantity] = useState(1);
-    const [activeTab, setActiveTab] = useState('description');
-    const [selectedUnit, setSelectedUnit] = useState('Box');
-    const [isAdded, setIsAdded] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-    const [realReviews, setRealReviews] = useState([]);
+    const [currentImage, setCurrentImage] = useState(null);
+    const [selectedVariant, setSelectedVariant] = useState(null);
 
-    // Fetch Reviews from Firebase
     useEffect(() => {
-        if (!id) return;
-        const reviewsRef = ref(db, `reviews/${id}`);
-        const unsubscribe = onValue(reviewsRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                const list = Object.entries(data).map(([rid, val]) => ({
-                    id: rid,
-                    ...val
-                })).sort((a, b) => new Date(b.date) - new Date(a.date));
-                setRealReviews(list);
-            } else {
-                setRealReviews([]);
-            }
-        });
-        return () => unsubscribe();
+        window.scrollTo(0, 0);
     }, [id]);
-
-    const getActiveSize = () => {
-        if (!product) return { label: '', ratio: 1 };
-        return { label: product.unit, ratio: 1 };
-    };
 
     useEffect(() => {
         let isMounted = true;
         let unsubscribe = () => { };
-
         setIsLoading(true);
-        setProduct(null);
 
         const safetyTimeout = setTimeout(() => {
             if (isMounted) setIsLoading(false);
         }, 3000);
 
         try {
-            const productRef = ref(db, `products/${id}`);
-            unsubscribe = onValue(productRef, (snapshot) => {
+            const productRef = doc(db, 'products', id);
+            unsubscribe = onSnapshot(productRef, (snapshot) => {
                 if (!isMounted) return;
-
                 try {
-                    const data = snapshot.val();
-
+                    const data = snapshot.data();
                     if (!data) {
                         setProduct(null);
                     } else {
+                        // Parse Highlights
                         let parsedHighlights = [];
-                        const rawHighlights = data.highlights || "";
-                        if (typeof rawHighlights === 'string') {
-                            parsedHighlights = rawHighlights.split(/[,\n]/).map(h => h.trim()).filter(Boolean);
-                        } else if (Array.isArray(rawHighlights)) {
-                            parsedHighlights = rawHighlights;
+                        if (typeof data.highlights === 'string') {
+                            parsedHighlights = data.highlights.split(/[,\n]/).map(h => h.trim()).filter(Boolean);
+                        } else if (Array.isArray(data.highlights)) {
+                            parsedHighlights = data.highlights;
                         }
 
+                        // Parse Specifications
                         let parsedSpecs = [];
                         const specsText = data.specification || data.specifications || "";
                         if (typeof specsText === 'string' && specsText.trim()) {
                             parsedSpecs = specsText.split('\n').map(line => {
                                 const trimLine = line.trim();
                                 if (!trimLine) return null;
-
                                 const colonIndex = trimLine.indexOf(':');
                                 if (colonIndex > 0) {
                                     return {
@@ -100,35 +73,39 @@ const ProductDetail = () => {
                             parsedSpecs = specsText;
                         }
 
+                        // Parse Pros & Cons
+                        let parsedPros = [];
+                        if (typeof data.pros === 'string') {
+                            parsedPros = data.pros.split('\n').map(p => p.trim()).filter(Boolean);
+                        } else if (Array.isArray(data.pros)) {
+                            parsedPros = data.pros;
+                        }
+
+                        let parsedCons = [];
+                        if (typeof data.cons === 'string') {
+                            parsedCons = data.cons.split('\n').map(c => c.trim()).filter(Boolean);
+                        } else if (Array.isArray(data.cons)) {
+                            parsedCons = data.cons;
+                        }
+
                         const enrichedProduct = {
                             ...data,
                             id: id,
-                            img: data.img || data.image || data.compressedImage || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80',
-                            unit: data.unit || 'Box',
+                            img: data.img || data.image || data.compressedImage || '/phones/image8-removebg-preview.png',
+                            gallery: data.gallery || [],
+                            variants: data.variants || [],
                             highlights: parsedHighlights,
                             specifications: parsedSpecs,
-                            reviews: data.reviews || [],
+                            pros: parsedPros,
+                            cons: parsedCons,
                             longDescription: data.description || ''
                         };
 
                         setProduct(enrichedProduct);
-                        
-                        const hasBoxPrice = data.priceBox !== undefined && data.priceBox !== '';
-                        const hasLarriPrice = data.priceLarri !== undefined && data.priceLarri !== '';
-                        setSelectedUnit(hasBoxPrice ? 'Box' : (hasLarriPrice ? 'Larri' : (data.unit === 'Per Larri' ? 'Larri' : 'Box')));
-
-                        const recentKey = 'gokulgorakhpur_recently_viewed';
-                        const saved = localStorage.getItem(recentKey);
-                        let recentList = saved ? JSON.parse(saved) : [];
-                        const minimalProduct = {
-                            id: enrichedProduct.id,
-                            name: enrichedProduct.name,
-                            img: enrichedProduct.img || enrichedProduct.image || enrichedProduct.compressedImage,
-                            category: enrichedProduct.category,
-                            price: enrichedProduct.price
-                        };
-                        recentList = [minimalProduct, ...recentList.filter(p => p.id !== minimalProduct.id)].slice(0, 10);
-                        localStorage.setItem(recentKey, JSON.stringify(recentList));
+                        setCurrentImage(enrichedProduct.img);
+                        if (enrichedProduct.variants && enrichedProduct.variants.length > 0) {
+                            setSelectedVariant(enrichedProduct.variants[0]);
+                        }
                     }
                 } catch (innerError) {
                     console.error("Data processing error:", innerError);
@@ -154,72 +131,6 @@ const ProductDetail = () => {
         };
     }, [id]);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [id]);
-
-    if (isLoading) {
-        return <ProductSkeleton />;
-    }
-
-    if (!product) {
-        return (
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <div className="text-center">
-                    <h2 className="text-2xl font-black text-slate-900 mb-4">Product Not Found.</h2>
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="px-8 py-3 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs"
-                    >
-                        Go Back
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    const hasBoxPrice = product?.priceBox !== undefined && product?.priceBox !== '';
-    const hasLarriPrice = product?.priceLarri !== undefined && product?.priceLarri !== '';
-    const currentPrice = selectedUnit === 'Box' 
-        ? (product.priceBox || product.price || 0) 
-        : (product.priceLarri || product.price || 0);
-
-    // Calculate Max Available based on selected unit and larriPerBox
-    const maxAvailable = selectedUnit === 'Box' 
-        ? (product.larriPerBox && product.larriPerBox > 0 ? Math.floor((product.stock || 0) / product.larriPerBox) : (product.stock || 0))
-        : (product.stock || 0);
-
-    const getCartItem = () => {
-        return {
-            ...product,
-            id: product.id,
-            name: product.name,
-            price: currentPrice,
-            selectedUnit: selectedUnit,
-            originalId: product.id
-        };
-    };
-
-    const handleAddToCart = () => {
-        if (!user) {
-            openAuthModal('login');
-            return;
-        }
-        addToCart(getCartItem(), quantity);
-        addNotification(product);
-        setIsAdded(true);
-        setTimeout(() => setIsAdded(false), 2000);
-    };
-
-    const handleBuyNow = () => {
-        if (!user) {
-            openAuthModal('login');
-            return;
-        }
-        addToCart(getCartItem(), quantity);
-        navigate('/cart');
-    };
-
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
@@ -232,95 +143,126 @@ const ProductDetail = () => {
         }
     };
 
+    if (isLoading) {
+        return <ProductSkeleton />;
+    }
+
+    if (!product) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+                <h2 className="text-3xl font-black text-slate-900 mb-6">Device Not Found</h2>
+                <button
+                    onClick={() => navigate.push('/products')}
+                    className="px-8 py-3 bg-amber-500 text-white rounded-full font-black uppercase tracking-widest text-xs hover:bg-amber-400 shadow-md active:scale-95 transition-all"
+                >
+                    Back to All Phones
+                </button>
+            </div>
+        );
+    }
+
+    const currentPrice = selectedVariant 
+        ? parseFloat(selectedVariant.price || 0) 
+        : parseFloat(product.price || product.priceBox || product.priceLarri || 0);
+
+    const originalPrice = selectedVariant 
+        ? parseFloat(selectedVariant.originalPrice || 0) 
+        : parseFloat(product.originalPrice || 0);
+
+    const hasProsCons = product.pros?.length > 0 || product.cons?.length > 0;
+
     return (
-        <div className="min-h-screen bg-slate-50/50 pt-32 pb-12 lg:pt-40 overflow-x-hidden">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-slate-50 pt-[90px] sm:pt-[100px] pb-12 lg:pb-24 font-['Montserrat',sans-serif] text-slate-900">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16">
 
                 {/* Navigation / Breadcrumbs */}
                 <motion.button
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    onClick={() => navigate(-1)}
-                    className="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors mb-8 group"
+                    onClick={() => navigate.back()}
+                    className="flex items-center gap-2 text-slate-500 hover:text-amber-600 transition-colors mb-4 sm:mb-6 group w-max"
                 >
-                    <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Back to Products</span>
+                    <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider">Back to Database</span>
                 </motion.button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
 
-                    {/* Left Side: Image Section */}
+                    {/* Left Column: Image & Quick Specs */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="relative"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="lg:col-span-5 relative"
                     >
-                        <div className="aspect-square bg-white rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-200/50 flex items-center justify-center overflow-hidden p-12 group">
+                        <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] bg-white rounded-[2rem] border border-slate-200 shadow-xl flex items-center justify-center overflow-hidden p-8 sm:p-12 group">
+                            
+                            {/* Background Glow */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 to-transparent pointer-events-none" />
+                            
                             <motion.img
-                                src={product.img}
+                                src={currentImage || product.img}
                                 alt={product.name}
-                                initial={{ scale: 0.8, rotate: -10 }}
-                                animate={{ scale: 1, rotate: 0 }}
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
                                 transition={{ duration: 0.6, delay: 0.2 }}
-                                whileHover={{ scale: 1.1 }}
-                                className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-700"
+                                whileHover={{ scale: 1.05 }}
+                                className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 relative z-10"
                             />
 
-                            {/* Image Badges */}
-                            <div className="absolute top-8 left-8 right-8 flex justify-between items-start pointer-events-none">
-                                <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-100 shadow-sm">
-                                    <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">{product.badge || 'NEW ARRIVAL'}</span>
-                                </div>
-                                <div className="flex gap-2 pointer-events-auto">
-                                    <motion.button
-                                        whileTap={{ scale: 0.8 }}
-                                        onClick={handleShare}
-                                        className="w-12 h-12 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors"
-                                    >
-                                        <Share2 size={20} />
-                                    </motion.button>
-                                </div>
+                            {/* Badges & Actions */}
+                            <div className="absolute top-6 left-6 right-6 flex justify-between items-start z-20">
+                                {product.brand && (
+                                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+                                        <span className="text-[9px] font-black text-amber-600 uppercase tracking-widest">{product.brand}</span>
+                                    </div>
+                                )}
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={handleShare}
+                                    className="w-10 h-10 bg-white/90 backdrop-blur-md rounded-xl border border-slate-200 shadow-sm flex items-center justify-center text-slate-500 hover:text-amber-600 transition-colors"
+                                    title="Share this phone"
+                                >
+                                    <Share2 size={16} />
+                                </motion.button>
                             </div>
                         </div>
 
-                        {/* Trust Badges below image */}
-                        <div className="grid grid-cols-3 gap-4 mt-8">
-                            {[
-                                { icon: Truck, label: "Fast Shipping", sub: "Khalilabad" },
-                                { icon: ShieldCheck, label: "Pure Quality", sub: "100% Organic" },
-                                { icon: RefreshCw, label: "Daily Fresh", sub: "Farm Grown" }
-                            ].map((item, i) => (
-                                <div key={i} className="text-center p-4 bg-white rounded-3xl border border-slate-100">
-                                    <item.icon size={20} className="mx-auto text-amber-600 mb-2" />
-                                    <p className="text-[8px] font-black text-slate-900 uppercase tracking-tight">{item.label}</p>
-                                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">{item.sub}</p>
-                                </div>
-                            ))}
-                        </div>
+                        {/* Image Gallery */}
+                        {product.gallery && product.gallery.length > 1 && (
+                            <div className="flex items-center gap-3 mt-4 overflow-x-auto pb-2 custom-scrollbar">
+                                {product.gallery.map((imgSrc, idx) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => setCurrentImage(imgSrc)}
+                                        className={`shrink-0 w-16 h-16 rounded-xl border-2 overflow-hidden bg-white flex items-center justify-center p-1 transition-all ${currentImage === imgSrc ? 'border-amber-500 shadow-md scale-105' : 'border-slate-200 hover:border-amber-300'}`}
+                                    >
+                                        <img src={imgSrc} alt={`${product.name} view ${idx+1}`} className="w-full h-full object-contain" />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Removed Top Features Highlights (Icons) as it is replaced by Variant Highlights */}
                     </motion.div>
 
-                    {/* Right Side: Details Section */}
-                    <div className="space-y-10">
+                    {/* Right Column: Details & Pricing */}
+                    <div className="lg:col-span-7 space-y-8 lg:space-y-10">
+                        
+                        {/* Header Info */}
                         <div>
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="flex items-center gap-2 mb-4"
+                                className="flex items-center gap-3 mb-4"
                             >
-                                <div className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-amber-100">
-                                    {product.category}
+                                <div className="bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-amber-200">
+                                    {product.category || 'Smartphone'}
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star key={i} size={10} className={`${i < (realReviews.reduce((acc, r) => acc + r.rating, 0) / (realReviews.length || 1)) ? 'fill-amber-500 text-amber-500' : 'text-slate-200'}`} />
-                                    ))}
-                                    <span className="text-[10px] font-black text-slate-900 ml-1">
-                                        {realReviews.length > 0 ? (realReviews.reduce((acc, r) => acc + r.rating, 0) / realReviews.length).toFixed(1) : '5.0'}
-                                    </span>
-                                    <span className="text-[10px] font-bold text-slate-400 ml-1 uppercase tracking-widest">
-                                        ({realReviews.length} REVIEWS)
-                                    </span>
+                                <div className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+                                    <Star size={12} className="fill-amber-500 text-amber-500" />
+                                    <span className="text-[10px] font-black text-slate-900">4.8</span>
+                                    <span className="text-[10px] font-bold text-slate-500 uppercase">Expert Rating</span>
                                 </div>
                             </motion.div>
 
@@ -328,292 +270,276 @@ const ProductDetail = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-none mb-6 italic break-words capitalize"
+                                className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6 capitalize"
                             >
-                                {product.name.toLowerCase()}.
+                                {product.name}
                             </motion.h1>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="flex flex-col gap-4 mb-8"
-                            >
-                                {/* Unit Toggle */}
-                                {(hasBoxPrice && hasLarriPrice) ? (
-                                    <div className="flex bg-slate-100 rounded-xl p-1.5 w-max">
-                                        <button
-                                            onClick={() => setSelectedUnit('Box')}
-                                            className={`px-5 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${selectedUnit === 'Box' ? 'bg-white text-[#27318a] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                                        >
-                                            Per Box
-                                        </button>
-                                        <button
-                                            onClick={() => setSelectedUnit('Larri')}
-                                            className={`px-5 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${selectedUnit === 'Larri' ? 'bg-white text-[#27318a] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                                        >
-                                            Per Larri
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="w-max">
-                                        <span className="text-[#27318a] bg-blue-50 px-4 py-2 rounded-full border border-[#27318a]/10 text-[11px] font-black uppercase tracking-widest">
-                                            Per {selectedUnit}
-                                        </span>
-                                    </div>
-                                )}
-
-                                <div className="flex items-baseline gap-4">
-                                    <span className="text-5xl font-black text-[#27318a] tracking-tighter">₹{currentPrice * quantity}</span>
-                                    {product.discount > 0 && (
-                                        <>
-                                            <span className="text-lg font-bold text-slate-300 line-through">₹{Math.round(currentPrice * (1 + (product.discount / 100))) * quantity}</span>
-                                            <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest">{product.discount}% OFF</span>
-                                        </>
-                                    )}
-                                    <span className="text-xs text-white font-bold ml-2 bg-[#27318a] px-3 py-1 rounded-full">/ {selectedUnit}</span>
-                                </div>
-                            </motion.div>
 
                             <motion.p
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                                className="text-slate-500 text-sm lg:text-base font-semibold leading-relaxed max-w-xl"
+                                transition={{ delay: 0.2 }}
+                                className="text-slate-600 text-sm sm:text-base font-medium leading-relaxed max-w-2xl"
                             >
-                                {product.description}
+                                {product.longDescription}
                             </motion.p>
+
+                            {/* Global Key Highlights */}
+                            {product.highlights && product.highlights.length > 0 && (
+                                <motion.div 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.25 }}
+                                    className="flex flex-wrap gap-2 mt-4"
+                                >
+                                    {product.highlights.map((highlight, i) => (
+                                        <span key={i} className="px-3 py-1.5 bg-amber-50 text-amber-600 border border-amber-200 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                            {highlight}
+                                        </span>
+                                    ))}
+                                </motion.div>
+                            )}
                         </div>
 
-                        {/* Controls Section */}
-                        <div className="space-y-6 max-w-md">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {/* Quantity Selector */}
-                                <div className="flex items-center justify-between bg-white rounded-2xl p-4 border border-slate-100">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Qty</span>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                                            className="w-10 h-10 flex items-center justify-center text-white bg-[#27318a] rounded-xl hover:bg-[#1e2670] transition-colors"
-                                        >
-                                            <Minus size={16} />
-                                        </button>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            value={quantity}
-                                            onChange={(e) => {
-                                                const val = parseInt(e.target.value, 10);
-                                                if (!isNaN(val) && val >= 1) {
-                                                    setQuantity(Math.min(val, maxAvailable));
-                                                } else if (e.target.value === '') {
-                                                    setQuantity(1);
-                                                }
-                                            }}
-                                            className="w-14 h-10 text-center font-black text-lg text-[#27318a] bg-blue-50 border-2 border-[#27318a]/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#27318a]/30 focus:border-[#27318a] transition-all"
-                                        />
-                                        <button
-                                            onClick={() => {
-                                                if (quantity < maxAvailable) {
-                                                    setQuantity(q => q + 1);
-                                                } else {
-                                                    addNotification({ name: `${product.name} (Max Available Reached)` });
-                                                }
-                                            }}
-                                            style={{ backgroundColor: quantity >= maxAvailable ? '#f1f5f9' : '#fce513' }}
-                                            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-colors ${quantity >= maxAvailable ? 'text-slate-400 cursor-not-allowed' : 'text-[#27318a] hover:brightness-105'}`}
-                                        >
-                                            <Plus size={16} />
-                                        </button>
+                        {/* Variant Selector */}
+                        {product.variants && product.variants.length > 0 && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.25 }}
+                                className="mb-8"
+                            >
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
+                                    Variant: <span className="text-amber-600 ml-1">{selectedVariant?.name}</span>
+                                </p>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.variants.map((variant, idx) => {
+                                        const isSelected = selectedVariant?.name === variant.name;
+                                        return (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setSelectedVariant(variant)}
+                                                className={`min-w-[110px] text-left p-3 rounded-xl border-2 transition-all ${isSelected ? 'border-amber-500 bg-amber-500/5 shadow-md scale-105' : 'border-slate-200 bg-white hover:border-amber-300'}`}
+                                            >
+                                                <div className="text-xs font-black text-slate-900 mb-1">{variant.name}</div>
+                                                <div className="text-xs font-bold text-amber-600">₹{parseFloat(variant.price).toLocaleString('en-IN')}</div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </motion.div>
+                        )}
+
+                        {/* Variant-Specific Highlights (Flipkart Style) */}
+                        {selectedVariant?.highlights && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                key={selectedVariant.name} // re-animate when variant changes
+                                className="mb-8 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm"
+                            >
+                                <h3 className="text-lg font-black text-slate-900 mb-5 flex items-center gap-2">
+                                    Product Highlights <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">{selectedVariant.name}</span>
+                                </h3>
+                                <ul className="space-y-4">
+                                    {selectedVariant.highlights.storage && (
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <HardDrive size={20} className="text-slate-600" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                {selectedVariant.highlights.storage.split('|').map((line, i) => (
+                                                    <span key={i} className={i === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                    {selectedVariant.highlights.processor && (
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <Cpu size={20} className="text-slate-600" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                {selectedVariant.highlights.processor.split('|').map((line, i) => (
+                                                    <span key={i} className={i === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                    {selectedVariant.highlights.rearCamera && (
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <Camera size={20} className="text-slate-600" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                {selectedVariant.highlights.rearCamera.split('|').map((line, i) => (
+                                                    <span key={i} className={i === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                    {selectedVariant.highlights.frontCamera && (
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <Camera size={20} className="text-slate-600" />
+                                                <div className="absolute w-2 h-2 bg-white rounded-full translate-x-3 translate-y-3" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                {selectedVariant.highlights.frontCamera.split('|').map((line, i) => (
+                                                    <span key={i} className={i === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                    {selectedVariant.highlights.display && (
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <Smartphone size={20} className="text-slate-600" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                {selectedVariant.highlights.display.split('|').map((line, i) => (
+                                                    <span key={i} className={i === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                    {selectedVariant.highlights.battery && (
+                                        <li className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <Battery size={20} className="text-slate-600" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                {selectedVariant.highlights.battery.split('|').map((line, i) => (
+                                                    <span key={i} className={i === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    )}
+                                    {selectedVariant.highlights.custom?.map((customItem, i) => (
+                                        <li key={`custom-${i}`} className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                                <CheckCircle2 size={20} className="text-slate-600" />
+                                            </div>
+                                            <div className="pt-1.5 flex flex-col">
+                                                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{customItem.type}</span>
+                                                {customItem.details.split('|').map((line, idx) => (
+                                                    <span key={idx} className={idx === 0 ? "text-sm font-bold text-slate-800" : "text-[11px] font-bold text-slate-500"}>
+                                                        {line.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        )}
+
+                        {/* Pricing & CTA */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="bg-white rounded-[2rem] p-6 sm:p-8 border border-slate-200 shadow-xl"
+                        >
+                            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8">
+                                <div>
+                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Current Best Price</p>
+                                    <div className="flex items-baseline gap-4">
+                                        <span className="text-4xl sm:text-5xl font-black text-amber-600 tracking-tighter">
+                                            ₹{currentPrice.toLocaleString('en-IN')}
+                                        </span>
+                                        {originalPrice > currentPrice ? (
+                                            <span className="text-lg font-bold text-slate-400 line-through">
+                                                ₹{originalPrice.toLocaleString('en-IN')}
+                                            </span>
+                                        ) : product.discount > 0 ? (
+                                            <span className="text-lg font-bold text-slate-400 line-through">
+                                                ₹{Math.round(currentPrice * (1 + (product.discount / 100))).toLocaleString('en-IN')}
+                                            </span>
+                                        ) : null}
                                     </div>
+                                    <p className="text-xs text-slate-500 mt-2 flex items-center gap-1.5">
+                                        <ShieldCheck size={14} className="text-emerald-500" /> 
+                                        Price verified through affiliate partners
+                                    </p>
                                 </div>
                             </div>
 
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                {maxAvailable <= 0 ? (
-                                    <button
-                                        disabled
-                                        className="flex-1 py-5 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 border-2 bg-slate-200 text-slate-500 border-slate-200 cursor-not-allowed"
-                                    >
-                                        Out of Stock
-                                    </button>
-                                ) : (
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handleAddToCart}
-                                        className={`flex-1 py-5 rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 border-2 ${isAdded
-                                            ? 'bg-[#27318a] text-white border-[#27318a]'
-                                            : 'bg-white text-[#27318a] border-[#27318a] hover:bg-[#27318a] hover:text-white'
-                                            }`}
-                                    >
-                                        <ShoppingCart size={18} />
-                                        {isAdded ? 'Added to Bag!' : 'Add to Bag'}
-                                    </motion.button>
+                            {/* Affiliate CTA */}
+                            <a 
+                                href={product.affiliateLink || "#"} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="w-full bg-amber-500 text-white font-black text-sm uppercase tracking-widest py-4 sm:py-5 rounded-2xl shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:bg-amber-400 transition-all flex items-center justify-center gap-3 active:scale-[0.98] group"
+                            >
+                                Check Best Deals 
+                                <ExternalLink size={18} strokeWidth={2.5} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+                            </a>
+                        </motion.div>
+
+                        {/* Detailed Specifications section removed as per user request */}
+
+                        {/* Pros & Cons (Backward Compatibility) */}
+                        {hasProsCons && (
+                            <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+                                {/* Pros */}
+                                {product.pros?.length > 0 && (
+                                    <div className="bg-white shadow-sm rounded-[2rem] p-6 sm:p-8 border border-emerald-500/20">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                                                <CheckCircle2 size={24} />
+                                            </div>
+                                            <h3 className="text-lg font-black text-slate-900">What we like</h3>
+                                        </div>
+                                        <ul className="space-y-4">
+                                            {product.pros.map((pro, i) => (
+                                                <li key={i} className="flex items-start gap-3">
+                                                    <CheckCircle2 size={16} className="text-emerald-500 mt-1 shrink-0" />
+                                                    <span className="text-sm text-slate-600 font-bold leading-relaxed">{pro}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 )}
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={handleBuyNow}
-                                    style={{ backgroundColor: '#fce513' }}
-                                    className="flex-1 py-5 text-[#27318a] rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] hover:brightness-105 transition-all shadow-xl"
-                                >
-                                    Buy Now
-                                </motion.button>
-                            </div>
-                        </div>
-
-                        {/* Tabs Section */}
-                        <div className="pt-12">
-                            <div className="flex flex-wrap gap-8 border-b border-slate-100 mb-8">
-                                {['description', 'specifications', 'highlights', 'reviews'].map((tab) => (
-                                    <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab)}
-                                        className={`pb-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative ${activeTab === tab ? 'text-slate-900' : 'text-slate-300'
-                                            }`}
-                                    >
-                                        {tab}
-                                        {activeTab === tab && (
-                                            <motion.div
-                                                layoutId="activeTab"
-                                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-600"
-                                            />
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className="min-h-[200px]">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeTab}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        {activeTab === 'description' && (
-                                            <p className="text-slate-500 text-sm font-semibold leading-relaxed max-w-2xl">
-                                                {product.longDescription || product.description}
-                                            </p>
-                                        )}
-                                        {activeTab === 'specifications' && (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-                                                {product.specifications && product.specifications.length > 0 ? (
-                                                    product.specifications.map((spec, i) => (
-                                                        <div key={i} className="flex justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-amber-200 transition-colors">
-                                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{spec.label}</span>
-                                                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{spec.value}</span>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="col-span-full p-8 bg-white rounded-[2rem] border border-slate-100 border-dashed text-center">
-                                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 text-center w-full">Detailed specifications</p>
-                                                        <p className="text-slate-600 text-sm font-semibold">{product.description}</p>
-                                                    </div>
-                                                )}
+                                {/* Cons */}
+                                {product.cons?.length > 0 && (
+                                    <div className="bg-white shadow-sm rounded-[2rem] p-6 sm:p-8 border border-rose-500/20">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
+                                                <XCircle size={24} />
                                             </div>
-                                        )}
-                                        {activeTab === 'highlights' && (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
-                                                {(product.highlights || []).map((highlight, i) => (
-                                                    <div key={i} className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
-                                                        <div className="w-2 h-2 bg-amber-500 rounded-full" />
-                                                        <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{highlight}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                        {activeTab === 'reviews' && (
-                                            <div className="space-y-6 max-w-2xl">
-                                                {realReviews && (
-                                                    <div className="p-6 bg-amber-50 rounded-[2rem] border border-amber-100 mb-8 flex items-center justify-between">
-                                                        <div>
-                                                            <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1">Average Rating</p>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-3xl font-black text-slate-900 leading-none">
-                                                                    {realReviews.length > 0 ? (realReviews.reduce((acc, r) => acc + r.rating, 0) / realReviews.length).toFixed(1) : '5.0'}
-                                                                </span>
-                                                                <div className="flex items-center gap-0.5">
-                                                                    {[...Array(5)].map((_, i) => (
-                                                                        <Star key={i} size={14} className="fill-amber-500 text-amber-500" />
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="text-right">
-                                                            <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1">Total Reviews</p>
-                                                            <p className="text-2xl font-black text-slate-900 leading-none">
-                                                                {realReviews.length}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {realReviews && realReviews.length > 0 ? (
-                                                    realReviews.map((review) => (
-                                                        <div key={review.id} className="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                                            <div className="flex justify-between items-start mb-4">
-                                                                <div className="flex items-center gap-3">
-                                                                    <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200">
-                                                                        {review.userPhoto ? (
-                                                                            <img src={review.userPhoto} alt={review.userName} className="w-full h-full object-cover" />
-                                                                        ) : (
-                                                                            <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold text-xs">
-                                                                                {review.userName?.charAt(0)}
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                    <div>
-                                                                        <p className="text-sm font-black text-slate-900 leading-none mb-1">{review.userName || 'Verified Buyer'}</p>
-                                                                        <div className="flex items-center gap-1">
-                                                                            {[...Array(5)].map((_, i) => (
-                                                                                <Star key={i} size={10} className={`${i < review.rating ? 'fill-amber-500 text-amber-500' : 'text-slate-200'}`} />
-                                                                            ))}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                                                                    {new Date(review.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                                                </span>
-                                                            </div>
-                                                            <p className="text-sm text-slate-600 font-semibold mb-4 leading-relaxed">"{review.comment}"</p>
-
-                                                            {review.images && review.images.length > 0 && (
-                                                                <div className="flex flex-wrap gap-2 mt-4">
-                                                                    {review.images.map((img, idx) => (
-                                                                        <a key={idx} href={img} target="_blank" rel="noopener noreferrer" className="block">
-                                                                            <div className="w-20 h-20 rounded-xl overflow-hidden border border-slate-100 hover:border-amber-500 transition-colors">
-                                                                                <img src={img} alt={`Review ${idx}`} className="w-full h-full object-cover" />
-                                                                            </div>
-                                                                        </a>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="text-center py-20 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 border-dashed">
-                                                        <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 mx-auto mb-4">
-                                                            <Star size={32} fill="currentColor" />
-                                                        </div>
-                                                        <p className="text-xs font-black text-slate-900 uppercase tracking-[0.2em]">High Customer Satisfaction</p>
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Be the first to leave a detailed comment!</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </motion.div>
-                                </AnimatePresence>
+                                            <h3 className="text-lg font-black text-slate-900">What to consider</h3>
+                                        </div>
+                                        <ul className="space-y-4">
+                                            {product.cons.map((con, i) => (
+                                                <li key={i} className="flex items-start gap-3">
+                                                    <XCircle size={16} className="text-rose-500 mt-1 shrink-0" />
+                                                    <span className="text-sm text-slate-600 font-bold leading-relaxed">{con}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
-                        </div>
+                        )}
 
                     </div>
                 </div>
             </div>
 
+            {/* Recommendations */}
             <RecommendedProducts currentProductId={product.id} category={product.category} />
 
             <ShareModal

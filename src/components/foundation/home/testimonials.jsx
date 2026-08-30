@@ -1,9 +1,12 @@
+"use client";
+
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Added for routing redirect
+ // Added for routing redirect
 import { motion } from 'framer-motion';
 import { Quote, Star, CheckCircle2, Award, Users, ThumbsUp, ShoppingBag } from 'lucide-react';
-import { realtimeDb as db } from '../../../firebase';
-import { ref, onValue } from 'firebase/database';
+import { db } from '../../../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 // Import local testimonial images
 import raviImg from '../../../assets/testimonials/ravi.webp';
@@ -19,7 +22,7 @@ const TESTIMONIAL_IMG_MAP = {
 };
 
 const Testimonials = () => {
-  const navigate = useNavigate(); // Initialize navigation logic
+  const navigate = useRouter(); // Initialize navigation logic
 
   const [reviews, setReviews] = useState([
     {
@@ -66,12 +69,12 @@ const Testimonials = () => {
   };
 
   useEffect(() => {
-    const reviewsRef = ref(db, 'settings/testimonials/reviews');
-    const statsRef = ref(db, 'settings/testimonials/stats');
+    const reviewsRef = doc(db, 'settings', 'testimonials_reviews');
+    const statsRef = doc(db, 'settings', 'testimonials_stats');
 
-    const unsubReviews = onValue(reviewsRef, (snap) => {
+    const unsubReviews = onSnapshot(reviewsRef, (snap) => {
       if (snap.exists()) {
-        const data = snap.val();
+        const data = snap.data();
         const resolved = Object.values(data).map(r => ({
           ...r,
           image: TESTIMONIAL_IMG_MAP[r.image] || (typeof r.image === 'string' ? r.image.replace('.png', '.webp') : r.image) || raviImg
@@ -80,8 +83,8 @@ const Testimonials = () => {
       }
     });
 
-    const unsubStats = onValue(statsRef, (snap) => {
-      if (snap.exists()) setStats(Object.values(snap.val()));
+    const unsubStats = onSnapshot(statsRef, (snap) => {
+      if (snap.exists()) setStats(Object.values(snap.data()));
     });
 
     return () => {
@@ -93,7 +96,7 @@ const Testimonials = () => {
   // Handler to smoothly route users to product showcase pipeline
   const handleOrderNowRedirect = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/products');
+    navigate.push('/products');
   };
 
   return (

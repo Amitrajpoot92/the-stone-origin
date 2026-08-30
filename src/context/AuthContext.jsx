@@ -8,17 +8,13 @@ import {
     getRedirectResult,
     updateProfile
 } from 'firebase/auth';
-import { auth, googleProvider, realtimeDb } from '../firebase';
-import { ref, update, get } from 'firebase/database';
+import { auth, googleProvider, db } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import Loader from '../components/common/Loader';
 
-
-const adminEmails = ['gokulgorakhpur26@gmail.com', 'admin@gmail.com'];
-
 export const isAdminEmail = (email) => {
-    if (!email) return false;
-    const lowerEmail = email.toLowerCase();
-    return adminEmails.includes(lowerEmail);
+    const adminEmails = ['24phonewala@gmail.com'];
+    return adminEmails.includes(email);
 };
 
 const AuthContext = createContext();
@@ -54,32 +50,33 @@ export const AuthProvider = ({ children }) => {
             if (currentUser) {
                 let dbUserData = null;
                 try {
-                    const userRef = ref(realtimeDb, `users/${currentUser.uid}`);
-                    const snapshot = await get(userRef);
+                    const userRef = doc(db, 'users', currentUser.uid);
+                    const snapshot = await getDoc(userRef);
                     if (snapshot.exists()) {
-                        dbUserData = snapshot.val();
+                        dbUserData = snapshot.data();
                     }
                 } catch (error) {
                     console.warn("DB Fetch Error in auth change:", error.message);
                 }
 
                 const isAdmin = isAdminEmail(currentUser.email) || (dbUserData && dbUserData.role === 'admin');
+                const userRole = isAdmin ? 'admin' : (dbUserData?.role || 'member');
 
                 const userData = {
                     id: currentUser.uid,
                     email: currentUser.email || null,
-                    name: currentUser.displayName || (dbUserData && dbUserData.name) || currentUser.email.split('@')[0],
+                    name: currentUser.displayName || (dbUserData && dbUserData.name) || (currentUser.email ? currentUser.email.split('@')[0] : 'User'),
                     photo: currentUser.photoURL || (dbUserData && dbUserData.photo) || null,
-                    role: isAdmin ? 'admin' : 'member',
-                    joinedAt: currentUser.metadata.creationTime || (dbUserData && dbUserData.joinedAt) || null,
+                    role: userRole,
+                    joinedAt: currentUser.metadata?.creationTime || (dbUserData && dbUserData.joinedAt) || null,
                     lastLogin: new Date().toISOString()
                 };
                 setUser(userData);
-                console.log("Auth State Changed: User detected with role:", userData.role, "Email:", userData.email);
+                console.log("Auth State Changed: User detected with role:", userData.role, "Email:", userData.email, "UID:", currentUser.uid);
 
-                // Persist user to Realtime Database
-                const userRef = ref(realtimeDb, `users/${currentUser.uid}`);
-                update(userRef, userData).catch(error => {
+                // Persist user to Firestore
+                const userRefToUpdate = doc(db, 'users', currentUser.uid);
+                setDoc(userRefToUpdate, userData, { merge: true }).catch(error => {
                     console.warn("DB Update Error (likely permissions):", error.message);
                 });
             } else {
@@ -132,8 +129,8 @@ export const AuthProvider = ({ children }) => {
                 joinedAt: userCredential.user.metadata.creationTime || new Date().toISOString(),
                 lastLogin: new Date().toISOString()
             };
-            const userRef = ref(realtimeDb, `users/${userCredential.user.uid}`);
-            await update(userRef, userData);
+            const userRef = doc(db, 'users', userCredential.user.uid);
+            await setDoc(userRef, userData, { merge: true });
 
             return { success: true };
         } catch (error) {

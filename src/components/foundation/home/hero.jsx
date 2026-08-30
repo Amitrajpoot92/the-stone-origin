@@ -1,151 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Truck, Clock, ShieldCheck, Leaf, ArrowRight } from 'lucide-react';
+"use client";
 
-// Slides Data
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+
+import { motion, AnimatePresence } from 'framer-motion';
+import { Smartphone, Zap, ShieldCheck, ChevronRight } from 'lucide-react';
+
+// Slides Data for Phone Research Site
 const slides = [
   {
     id: 1,
-    title: "Share the Taste,\nShare the Smile",
-    description: "Making every family gathering and tea break more joyful and tasty.",
-    image: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Slide1.webp",
-    mobileImage: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Slide1P.webp",
-    buttonText: "SHOP NOW",
+    title: "Discover Your Next\nSmartphone",
+    description: "In-depth reviews, unbiased comparisons, and expert specifications to help you make the right choice.",
+    image: "/phones/image1-removebg-preview.png",
+    mobileImage: "/phones/image1-removebg-preview.png",
+    buttonText: "Browse Phones",
     link: "/products"
   },
   {
     id: 2,
-    title: "More Crunch.\nMore Masti.",
-    description: "Crispy bites that add extra fun to your everyday moments.",
-    image: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Slide2.webp",
-    mobileImage: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Slide2P.webp",
-    buttonText: "SHOP NOW",
+    title: "Premium Flagships\nUncovered",
+    description: "Explore the latest top-tier devices from Apple, Samsung, Google, and more.",
+    image: "/phones/image2-removebg-preview.png",
+    mobileImage: "/phones/image2-removebg-preview.png",
+    buttonText: "Top Rated",
     link: "/products"
   },
   {
     id: 3,
-    title: "Snacks for\nEvery Home",
-    description: "From daily tea time to special occasions, made for every family.",
-    image: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Slide3.webp",
-    mobileImage: "https://ik.imagekit.io/gokulgorakhpur/Gokul/Slide3P.webp",
-    buttonText: "SHOP NOW",
-    link: "/products"
+    title: "Compare Specs\nLike a Pro",
+    description: "Find the best value for your budget with our detailed technical breakdowns.",
+    image: "/phones/image3-removebg-preview.png",
+    mobileImage: "/phones/image3-removebg-preview.png",
+    buttonText: "Compare Now",
+    link: "/compare"
   }
 ];
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-advance Carousel every 3 seconds
+  // Auto-advance Carousel every 5 seconds
   useEffect(() => {
     const slideTimer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 3000);
+    }, 5000);
     return () => clearInterval(slideTimer);
   }, []);
 
   return (
-    <section className="relative w-full min-h-[100dvh] lg:min-h-[550px] bg-white lg:bg-black lg:pt-32 pb-4 lg:pb-8 overflow-hidden flex flex-col justify-between font-['Montserrat',sans-serif]">
+    <section className="relative w-full min-h-[70vh] sm:min-h-[100dvh] lg:min-h-[700px] bg-slate-50 lg:pt-0 overflow-hidden flex flex-col justify-end lg:justify-center font-['Montserrat',sans-serif]">
       
-      {/* Desktop Full-screen Background Slider */}
-      <div className="hidden lg:block absolute inset-0 z-0">
+      {/* Full-screen Background Slider */}
+      <div className="absolute inset-0 z-0">
         <AnimatePresence>
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             className="absolute inset-0"
           >
-            <img
-              src={slides[currentSlide].image}
-              alt="Gokul Background"
-              className="w-full h-full object-cover object-center"
-            />
-            {/* Overlay to ensure text readability */}
-            <div className="absolute inset-0 bg-black/20 lg:bg-black/10"></div>
+            {/* Desktop Image */}
+            <div className="hidden sm:block absolute inset-y-0 right-0 left-0 lg:left-5/12">
+                <img
+                src={slides[currentSlide].image}
+                alt="Smartphone Tech"
+                className="w-full h-full object-contain object-right lg:object-center p-12 drop-shadow-2xl"
+                />
+            </div>
+            {/* Mobile Image */}
+            <div className="block sm:hidden absolute inset-x-0 top-16 bottom-[40%]">
+                <img
+                src={slides[currentSlide].mobileImage}
+                alt="Smartphone Tech"
+                className="w-full h-full object-contain object-bottom p-6 pb-0 drop-shadow-2xl"
+                />
+            </div>
+            {/* Light Gradient Overlay for Text Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/80 to-transparent lg:bg-gradient-to-r lg:from-slate-50 lg:via-slate-50/90 lg:to-transparent"></div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Mobile Image Slider (Top Half) */}
-      <div className="block lg:hidden relative w-full h-[55vh] min-h-[400px] pt-[32px] sm:pt-[42px]">
-        <div className="relative w-full h-full">
-          <AnimatePresence>
-            <motion.div
-              key={currentSlide}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <img
-                src={slides[currentSlide].mobileImage}
-                alt="Gokul Mobile Background"
-                className="w-full h-full object-cover object-top"
-              />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-
       {/* Main Hero Text Container */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-16 w-full relative z-10 flex-1 flex items-center lg:items-center mt-[-30px] lg:mt-0">
-        <div className="w-full lg:w-1/2">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-12 lg:px-16 w-full relative z-10 pb-8 pt-4 lg:pb-0 lg:pt-0">
+        <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="text-center lg:text-left pt-6 lg:pt-36"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="flex flex-col items-center lg:items-start"
             >
-              {/* Big Headline - Using Recoleta Bold */}
-              <h1
-                style={{ fontFamily: "'Recoleta', Georgia, serif" }}
-                className="text-4xl min-[426px]:text-5xl sm:text-6xl lg:text-[62px] xl:text-[68px] font-bold text-[#3d3d3d] lg:text-white leading-[1.08] tracking-tight mb-4 lg:mb-6 whitespace-pre-line lg:drop-shadow-lg"
-              >
+              
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 text-[11px] font-black uppercase tracking-[0.2em] mb-4 lg:mb-6">
+                <Zap size={14} /> Mobile First
+              </div>
+
+              {/* Big Headline */}
+              <h1 className="text-4xl min-[426px]:text-5xl sm:text-6xl lg:text-7xl font-black text-slate-900 leading-[1.1] tracking-tight mb-3 sm:mb-6 whitespace-pre-line drop-shadow-sm">
                 {slides[currentSlide].title}
               </h1>
 
-              {/* Description - Using Montserrat */}
-              <p className="text-sm sm:text-base text-[#3d3d3d]/90 lg:text-white/90 font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8 lg:drop-shadow-md">
+              {/* Description */}
+              <p className="text-sm sm:text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-lg mb-6 lg:mb-8 px-2 lg:px-0">
                 {slides[currentSlide].description}
               </p>
 
-              {/* Shop Now Button - Royal Blue #27318a Pill Style */}
+              {/* Action Button */}
               <Link
-                to={slides[currentSlide].link}
-                style={{ backgroundColor: '#27318a' }}
-                className="inline-flex items-center gap-3 px-8 py-3.5 text-white rounded-full text-xs sm:text-sm font-bold tracking-wider uppercase transition-all shadow-xl hover:opacity-95 active:scale-95 group"
+                href={slides[currentSlide].link}
+                className="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 bg-amber-500 text-slate-900 rounded-full text-sm font-black tracking-widest uppercase transition-all shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 hover:bg-amber-400 active:scale-95 group"
               >
                 {slides[currentSlide].buttonText}
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <ChevronRight size={18} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
           </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Bottom Controls */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-16 w-full relative z-20 mt-8 sm:mt-12">
-        {/* Carousel Indicators */}
-        <div className="flex justify-center items-center gap-2 mb-2 lg:mb-4">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-              style={{
-                backgroundColor: currentSlide === index ? '#27318a' : '#fef0cd',
-              }}
-              className={`h-2.5 rounded-full transition-all duration-300 ${currentSlide === index ? 'w-8 shadow-sm' : 'w-2.5 hover:bg-white'}`}
-            />
-          ))}
         </div>
       </div>
     </section>

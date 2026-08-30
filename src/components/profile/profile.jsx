@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import UserAvatar from '../common/UserAvatar';
-import { useOrders } from '../../context/OrderContext';
 import ConfirmDialog from '../common/ConfirmDialog';
-import { ref, get, update } from 'firebase/database';
-import { realtimeDb, auth } from '../../firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../../firebase';
 import { updatePassword } from 'firebase/auth';
 
 const ProfileSettings = () => {
   const { user } = useAuth();
-  const { orders } = useOrders();
+  const orders = [];
 
   const [address, setAddress] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -25,9 +24,9 @@ const ProfileSettings = () => {
     if (!user) return;
     const fetchAddress = async () => {
       try {
-        const userRef = ref(realtimeDb, `users/${user.id}`);
-        const snapshot = await get(userRef);
-        const data = snapshot.val();
+        const userRef = doc(db, 'users', user.id);
+        const snapshot = await getDoc(userRef);
+        const data = snapshot.data();
         if (data && data.address) {
           setAddress(data.address);
         } else if (orders.length > 0 && orders[0].address) {
@@ -66,8 +65,8 @@ const ProfileSettings = () => {
     setError('');
     setSuccess('');
     try {
-      const userRef = ref(realtimeDb, `users/${user.id}`);
-      await update(userRef, { address: address });
+      const userRef = doc(db, 'users', user.id);
+      await updateDoc(userRef, { address: address });
 
       if (newPassword) {
         if (!auth.currentUser) {

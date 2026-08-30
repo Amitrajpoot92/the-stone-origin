@@ -1,3 +1,7 @@
+"use client";
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -5,18 +9,16 @@ import {
   Settings, Heart, ShieldCheck, Star, Gift, MessageCircle, 
   Bell, HelpCircle, ArrowRight
 } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+
 import useScrollLock from '../../hooks/useScrollLock';
 import { useAuth } from '../../context/AuthContext';
-import { useCart } from '../../context/CartContext';
-import { useOrders } from '../../context/OrderContext';
+
 import UserAvatar from './UserAvatar';
 
 const AccountSidebar = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const { user, logout } = useAuth();
-  const { cartCount, grandTotal } = useCart();
-  const { orders } = useOrders();
+    const orders = [];
   
   const [recentlyViewed, setRecentlyViewed ] = useState([]);
   const [showNotifications, setShowNotifications] = useState(true);
@@ -52,14 +54,7 @@ const AccountSidebar = ({ isOpen, onClose }) => {
       path: '/orders',
       badge: activeOrdersCount > 0 ? `${activeOrdersCount} Active` : null 
     },
-    { 
-      id: 'cart', 
-      label: 'My Cart', 
-      desc: cartCount > 0 ? `${cartCount} items • ₹${grandTotal}` : 'Ready to Checkout?', 
-      icon: <ShoppingCart size={20} />, 
-      path: '/cart',
-      badge: cartCount > 0 ? cartCount : null
-    },
+    
     ...(user?.role === 'admin' ? [{
       id: 'admin',
       label: 'Admin Console',
@@ -125,7 +120,7 @@ const AccountSidebar = ({ isOpen, onClose }) => {
               {/* Profile Linked Action */}
               <div className="px-2">
                 <Link
-                  to="/profile"
+                  href="/profile"
                   onClick={onClose}
                   className="w-full flex items-center justify-between p-4.5 bg-slate-50/80 hover:bg-slate-900 hover:text-white rounded-[2rem] transition-all active:scale-95 group border border-slate-100 shadow-sm"
                 >
@@ -157,7 +152,7 @@ const AccountSidebar = ({ isOpen, onClose }) => {
                   {menuItems.map((item) => (
                     <Link
                       key={item.id}
-                      to={item.path}
+                      href={item.path}
                       onClick={onClose}
                       className="w-full flex items-center justify-between p-4.5 bg-white rounded-[2rem] hover:bg-slate-900 hover:text-white transition-all group border border-slate-100 shadow-sm"
                     >
@@ -218,7 +213,7 @@ const AccountSidebar = ({ isOpen, onClose }) => {
                     {recentlyViewed.map((prod) => (
                       <Link
                         key={prod.id}
-                        to={`/product/${prod.id}`}
+                        href={`/product/${prod.id}`}
                         onClick={onClose}
                         className="shrink-0 group text-center w-20 block"
                       >
@@ -276,7 +271,7 @@ const AccountSidebar = ({ isOpen, onClose }) => {
                     onClick={() => {
                       logout();
                       onClose();
-                      navigate('/');
+                      navigate.push('/');
                     }}
                     className="w-full py-4.5 bg-red-600 text-white rounded-[2rem] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-red-700 transition-all shadow-xl shadow-red-200 active:scale-95"
                   >
@@ -287,7 +282,7 @@ const AccountSidebar = ({ isOpen, onClose }) => {
                   <button
                     onClick={() => {
                       onClose();
-                      navigate('/login');
+                      navigate.push('/login');
                     }}
                     className="w-full py-4.5 bg-amber-600 text-white rounded-[2rem] text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-amber-700 transition-all shadow-xl shadow-amber-200 active:scale-95"
                   >

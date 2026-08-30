@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Leaf, ShieldCheck, BadgePercent, Store, Sprout, Soup, Wheat } from 'lucide-react';
-import { realtimeDb as db } from '../../../firebase';
-import { ref, onValue } from 'firebase/database';
+import { db } from '../../../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 const vegImg = 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=800&q=80';
 const fruitImg = 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=800&q=80';
 const spiceImg = 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&q=80';
@@ -48,9 +48,14 @@ const Story = () => {
   ]);
 
   useEffect(() => {
-    const storyRef = ref(db, 'settings/story/features');
-    const unsub = onValue(storyRef, (snap) => {
-      if (snap.exists()) setFeatures(Object.values(snap.val()));
+    const storyRef = doc(db, 'settings', 'story');
+    const unsub = onSnapshot(storyRef, (snap) => {
+      if (snap.exists()) {
+          const data = snap.data();
+          if (data.features) {
+              setFeatures(Object.values(data.features));
+          }
+      }
     });
     return () => unsub();
   }, []);

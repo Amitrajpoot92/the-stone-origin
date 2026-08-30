@@ -1,8 +1,10 @@
+"use client";
+
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { realtimeDb as db } from '../../firebase';
-import { ref, onValue } from 'firebase/database';
-import { Link } from 'react-router-dom';
+import { db } from '../../firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,16 +14,16 @@ const SearchBar = () => {
 
   // Fetch products for search
   useEffect(() => {
-    const productsRef = ref(db, 'products');
-    const unsubscribe = onValue(productsRef, (snap) => {
-      const data = snap.val();
-      if (data) {
-        setFirebaseProducts(Object.entries(data).map(([id, val]) => ({
+    const productsRef = collection(db, 'products');
+    const unsubscribe = onSnapshot(productsRef, (snap) => {
+      setFirebaseProducts(snap.docs.map(doc => {
+        const val = doc.data();
+        return {
           ...val,
-          id,
-          img: val.img || val.image || 'https://images.unsplash.com/photo-1550583794-a2b7142647ec?w=500'
-        })));
-      }
+          id: doc.id,
+          img: val.img || val.image || '/phones/image5-removebg-preview.png'
+        };
+      }));
     });
     return () => unsubscribe();
   }, []);
@@ -89,7 +91,7 @@ const SearchBar = () => {
             {searchResults.map((product) => (
               <Link
                 key={product.id}
-                to={`/product/${product.id}`}
+                href={`/product/${product.id}`}
                 onClick={handleProductClick}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200 group"
               >
@@ -146,4 +148,3 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
-

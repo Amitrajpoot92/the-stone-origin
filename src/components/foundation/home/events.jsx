@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, ArrowRight, PlayCircle, Plus, Sparkles, Globe, X, CheckCircle2 } from 'lucide-react';
-import { realtimeDb as db } from '../../../firebase';
-import { ref, onValue } from 'firebase/database';
+import { db } from '../../../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 // Import Legacy Images
 import legacy1 from '../../../assets/foundation/legacy/grand_opening.webp';
@@ -52,21 +52,21 @@ const Events = () => {
     }
   ]);
 
-  // Sync with RTDB
+  // Sync with Firestore
   useEffect(() => {
-    const eventsRef = ref(db, 'settings/events');
-    const legacyRef = ref(db, 'settings/legacy');
+    const eventsRef = doc(db, 'settings', 'events');
+    const legacyRef = doc(db, 'settings', 'legacy');
 
-    const unsubEvents = onValue(eventsRef, (snap) => {
+    const unsubEvents = onSnapshot(eventsRef, (snap) => {
       if (snap.exists()) {
-        const data = snap.val();
+        const data = snap.data();
         setFoundationEvents(Object.values(data));
       }
     });
 
-    const unsubLegacy = onValue(legacyRef, (snap) => {
+    const unsubLegacy = onSnapshot(legacyRef, (snap) => {
       if (snap.exists()) {
-        const data = snap.val();
+        const data = snap.data();
         setLegacyStories(Object.values(data));
       }
     });

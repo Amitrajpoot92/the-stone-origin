@@ -1,5 +1,8 @@
+"use client";
+
+import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
@@ -26,7 +29,7 @@ const snackCategories = [
 ];
 
 const SnacksRange = () => {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   // Array ko double kar rahe hain taaki animation loop ekdam seamless chale
   const duplicatedSnacks = [...snackCategories, ...snackCategories];
@@ -96,7 +99,7 @@ const SnacksRange = () => {
       {/* Explore All Button */}
       <div className="mt-14 flex justify-center px-4">
         <button 
-          onClick={() => navigate('/products')}
+          onClick={() => navigate.push('/products')}
           className="bg-[#fce513] hover:bg-[#e8d20e] text-[#333333] font-bold text-xs sm:text-sm px-8 py-3.5 sm:px-10 sm:py-4 rounded-full uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1"
         >
           Explore All

@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, X, Send, Sparkles, Camera, ImagePlus, Trash2, Loader2 } from 'lucide-react';
-import { realtimeDb as db, storage } from '../../firebase';
-import { ref, push, set } from 'firebase/database';
+import { db, storage } from '../../firebase';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { ref as sRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ReviewModal = ({ product, user, onClose, onReviewSubmitted }) => {
@@ -56,16 +56,16 @@ const ReviewModal = ({ product, user, onClose, onReviewSubmitted }) => {
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-            const reviewsRef = ref(db, `reviews/${product.id}`);
-            const newReviewRef = push(reviewsRef);
-            const reviewId = newReviewRef.key;
+            const reviewsRef = collection(db, 'reviews', product.id, 'list');
+            const newReviewRef = doc(reviewsRef);
+            const reviewId = newReviewRef.id;
 
             let imageUrls = [];
             if (selectedImages.length > 0) {
                 imageUrls = await uploadImages(reviewId);
             }
 
-            await set(newReviewRef, {
+            await setDoc(newReviewRef, {
                 userId: user.id,
                 userName: user.name,
                 userPhoto: user.photo || '',
