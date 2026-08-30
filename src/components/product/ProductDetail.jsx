@@ -200,15 +200,37 @@ const ProductDetail = () => {
                             {/* Background Glow */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 to-transparent pointer-events-none" />
                             
-                            <motion.img
-                                src={currentImage || product.img}
-                                alt={product.name}
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.6, delay: 0.2 }}
-                                whileHover={{ scale: 1.05 }}
-                                className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 relative z-10"
-                            />
+                            <AnimatePresence mode="wait">
+                                <motion.img
+                                    key={currentImage || product.img}
+                                    src={currentImage || product.img}
+                                    alt={product.name}
+                                    drag="x"
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    dragElastic={0.2}
+                                    onDragEnd={(e, { offset }) => {
+                                        const swipe = offset.x;
+                                        const gallery = product.gallery?.length > 0 ? product.gallery : [product.img];
+                                        if (gallery.length <= 1) return;
+                                        
+                                        const idx = gallery.indexOf(currentImage || product.img);
+                                        const currentIdx = idx === -1 ? 0 : idx;
+                                        
+                                        if (swipe < -50) {
+                                            // Swipe Left -> Next
+                                            setCurrentImage(gallery[(currentIdx + 1) % gallery.length]);
+                                        } else if (swipe > 50) {
+                                            // Swipe Right -> Prev
+                                            setCurrentImage(gallery[(currentIdx - 1 + gallery.length) % gallery.length]);
+                                        }
+                                    }}
+                                    initial={{ scale: 0.9, opacity: 0, x: 20 }}
+                                    animate={{ scale: 1, opacity: 1, x: 0 }}
+                                    exit={{ scale: 0.9, opacity: 0, x: -20 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="w-full h-full object-contain drop-shadow-2xl relative z-10 cursor-grab active:cursor-grabbing touch-pan-y"
+                                />
+                            </AnimatePresence>
 
                             {/* Badges & Actions */}
                             <div className="absolute top-6 left-6 right-6 flex justify-between items-start z-20">
@@ -230,7 +252,7 @@ const ProductDetail = () => {
 
                         {/* Image Gallery */}
                         {product.gallery && product.gallery.length > 1 && (
-                            <div className="flex items-center gap-3 mt-4 overflow-x-auto pb-2 custom-scrollbar">
+                            <div className="flex items-center gap-3 mt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
                                 {product.gallery.map((imgSrc, idx) => (
                                     <button 
                                         key={idx}
