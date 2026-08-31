@@ -69,7 +69,7 @@ const Compare = () => {
             return (
                 <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-8 flex flex-col items-center justify-center min-h-[250px] sm:min-h-[300px]">
                     <div className="w-24 h-12 mb-4 animate-pulse">
-                        <img src="/phones/24Mobiles-logo.png" alt="Loading" className="w-full h-full object-contain" />
+                        <img src="/phones/gemini-svg.svg" alt="Loading" className="w-full h-full object-contain" />
                     </div>
                     <span className="text-amber-600 font-bold text-sm">Loading...</span>
                 </div>

@@ -39,7 +39,7 @@ const Footer = () => {
                     <div className="flex flex-col pr-0 lg:pr-4">
                         <Link href="/" className="inline-block mb-4 sm:mb-6">
                             <div className="flex items-center cursor-pointer">
-                                <img src="/phones/24Mobiles-logo.png" alt="24mobiles Logo" className="h-10 md:h-12 object-contain" />
+                                <img src="/phones/gemini-svg.svg" alt="24mobiles Logo" className="h-10 md:h-12 object-contain" />
                             </div>
                         </Link>
                         <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 font-medium">

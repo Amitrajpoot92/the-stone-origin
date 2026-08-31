@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Home, Smartphone, Tags, Scale, Info, User, Search, X, ChevronRight } from 'lucide-react';
+import { Home, Smartphone, Tags, Scale, Info, User, Search, X, ChevronRight, Menu, Newspaper } from 'lucide-react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import throttle from 'lodash/throttle';
 
@@ -23,6 +23,19 @@ const Header = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [firebaseProducts, setFirebaseProducts] = useState([]);
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Prevent body scroll when sidebar is open
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isSidebarOpen]);
 
   // Scroll hide/show logic
   useMotionValueEvent(scrollY, "change", throttle((latest) => {
@@ -85,13 +98,18 @@ const Header = () => {
     setShowSearchResults(false);
   };
   
-  // Custom Nav Items for Phone Research Site
   const navItems = [
     { name: 'Home', path: '/', icon: <Home size={18} /> },
     { name: 'Phones', path: '/products', icon: <Smartphone size={18} /> },
     { name: 'Brands', path: '/categories', icon: <Tags size={18} /> },
     { name: 'Compare', path: '/compare', icon: <Scale size={18} /> },
-    { name: 'About', path: '/about', icon: <Info size={18} /> },
+    { name: 'News', path: '/news', icon: <Newspaper size={18} /> },
+  ];
+
+  const sidebarItems = [
+    ...navItems,
+    { name: 'About Us', path: '/about', icon: <Info size={18} /> },
+    { name: 'Contact Us', path: '/contact', icon: <User size={18} /> },
   ];
 
   return (
@@ -104,16 +122,40 @@ const Header = () => {
       >
 
         {/* Main Header Bar */}
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-10 py-0">
-          <div className="flex items-center justify-between h-12 sm:h-14 gap-4">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-10 py-0">
+          <div className="flex items-center justify-between h-12 sm:h-14 gap-4 relative">
 
-            {/* Logo */}
+            {/* Left Section: Mobile Hamburger / Desktop Logo */}
+            <div className="flex items-center flex-1 lg:flex-none">
+              {/* Mobile Hamburger Icon */}
+              <button 
+                onClick={() => setIsSidebarOpen(true)}
+                className="lg:hidden p-2 -ml-2 text-slate-800 hover:bg-slate-100 rounded-full transition-colors"
+              >
+                <Menu size={24} strokeWidth={2} />
+              </button>
+
+              {/* Desktop Logo */}
+              <motion.div
+                whileTap={{ scale: 0.95 }}
+                className="hidden lg:flex items-center cursor-pointer shrink-0"
+                onClick={() => navigate.push('/')}
+              >
+                <div className="flex flex-col items-start justify-center">
+                   <img src="/phones/gemini-svg.svg" alt="24mobiles Logo" className="h-7 md:h-8 object-contain" />
+                   <span className="text-[10px] text-slate-600 font-medium -mt-0.5 ml-1">All About Mobiles & Technology</span>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Center Section: Mobile Logo */}
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="flex items-center cursor-pointer shrink-0"
+              className="flex flex-col items-center justify-center cursor-pointer lg:hidden absolute left-1/2 -translate-x-1/2"
               onClick={() => navigate.push('/')}
             >
-              <img src="/phones/24Mobiles-logo.png" alt="24mobiles Logo" className="h-8 md:h-10 object-contain" />
+              <img src="/phones/gemini-svg.svg" alt="24mobiles Logo" className="h-6 object-contain" />
+              <span className="text-[8px] text-slate-500 font-medium leading-none -mt-1">All About Mobiles & Technology</span>
             </motion.div>
 
             {/* Desktop Navigation Links */}
@@ -156,15 +198,15 @@ const Header = () => {
             </nav>
 
             {/* Right Side Icons & Search */}
-            <div className="flex items-center gap-4 sm:gap-6 relative">
+            <div className="flex items-center justify-end flex-1 lg:flex-none gap-4 relative">
 
               {/* Search Toggle */}
               <div className="relative">
                 <button 
                   onClick={() => setShowSearchInput(!showSearchInput)}
-                  className={`p-2 rounded-full transition-all ${showSearchInput ? 'bg-amber-500 text-white' : 'text-slate-600 hover:text-amber-600 hover:bg-slate-100'}`}
+                  className={`p-2 rounded-full transition-all ${showSearchInput ? 'bg-amber-500 text-white' : 'text-slate-800 hover:text-amber-600 hover:bg-slate-100'}`}
                 >
-                   {showSearchInput ? <X size={20} strokeWidth={2.5} /> : <Search size={20} strokeWidth={2.5} />}
+                   {showSearchInput ? <X size={24} strokeWidth={2} /> : <Search size={24} strokeWidth={2} />}
                 </button>
                 
                 {/* Search Dropdown */}
@@ -230,11 +272,11 @@ const Header = () => {
       {/* Mobile Bottom Navigation Bar */}
       <motion.nav
         variants={{ visible: { y: 0, opacity: 1 }, hidden: { y: 150, opacity: 0 } }}
-        animate={hidden ? "hidden" : "visible"}
+        animate="visible"
         transition={{ duration: 0.4, ease: "circOut" }}
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] w-[94%] max-w-[440px] lg:hidden font-['Montserrat',sans-serif]"
+        className="fixed bottom-0 left-0 right-0 z-[60] w-full lg:hidden font-['Montserrat',sans-serif] bg-white border-t border-slate-200 shadow-[0_-5px_20px_rgba(0,0,0,0.03)] pb-safe"
       >
-        <div className="relative bg-white/90 backdrop-blur-2xl rounded-full p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.15)] border border-slate-200 flex justify-between items-center">
+        <div className="flex justify-between items-center px-1 sm:px-2 py-2">
           {navItems.map((item) => {
             const isActive = item.name === 'Phones'
               ? (location.pathname === '/products' || location.pathname.startsWith('/product/'))
@@ -243,19 +285,12 @@ const Header = () => {
               <button
                 key={item.name}
                 onClick={() => navigate.push(item.path)}
-                className={`relative flex flex-col items-center justify-center py-2 flex-1 rounded-full transition-all ${
-                  isActive ? 'text-white' : 'text-slate-500'
+                className={`flex flex-col items-center justify-center flex-1 py-1 transition-colors ${
+                  isActive ? 'text-amber-600' : 'text-slate-500 hover:text-amber-500'
                 }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-active-pill-mobile"
-                    className="absolute inset-1 bg-slate-900 rounded-full shadow-sm"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{item.icon}</span>
-                <span className="relative z-10 text-[9px] font-bold uppercase tracking-wider mt-0.5 truncate max-w-[55px]">
+                <span className="mb-1">{item.icon}</span>
+                <span className="text-[10px] font-bold tracking-wide">
                   {item.name}
                 </span>
               </button>
@@ -263,6 +298,77 @@ const Header = () => {
           })}
         </div>
       </motion.nav>
+      
+      {/* Mobile Sidebar Overlay & Drawer */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[70] lg:hidden"
+            />
+            
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+              className="fixed top-0 left-0 bottom-0 w-[80vw] max-w-[320px] bg-white z-[80] lg:hidden flex flex-col font-['Montserrat',sans-serif] shadow-2xl"
+            >
+              <div className="flex items-center justify-between p-5 border-b border-slate-100">
+                <div className="flex flex-col items-start justify-center">
+                   <img src="/phones/gemini-svg.svg" alt="24mobiles Logo" className="h-6 object-contain" />
+                   <span className="text-[9px] text-slate-500 font-bold -mt-0.5 ml-1">24MOBILES NAVIGATION</span>
+                </div>
+                <button 
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-2 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-500 transition-colors"
+                >
+                  <X size={20} strokeWidth={2.5} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto py-4 px-4 flex flex-col gap-2">
+                {sidebarItems.map((item) => {
+                  const isActive = item.name === 'Phones'
+                    ? (location.pathname === '/products' || location.pathname.startsWith('/product/'))
+                    : location.pathname === item.path;
+
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => {
+                        navigate.push(item.path);
+                        setIsSidebarOpen(false);
+                      }}
+                      className={`flex items-center gap-4 p-4 rounded-2xl transition-all ${
+                        isActive 
+                          ? 'bg-amber-50 text-amber-600 font-black shadow-sm border border-amber-100' 
+                          : 'bg-white text-slate-600 font-bold hover:bg-slate-50 border border-transparent hover:border-slate-100'
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isActive ? 'bg-amber-100' : 'bg-slate-100'}`}>
+                        {item.icon}
+                      </div>
+                      <span className="text-sm uppercase tracking-widest">{item.name}</span>
+                      <ChevronRight size={16} className={`ml-auto ${isActive ? 'text-amber-500' : 'text-slate-300'}`} />
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="p-5 border-t border-slate-100 bg-slate-50">
+                <p className="text-[10px] text-slate-400 font-bold text-center uppercase tracking-widest">© 2026 24Mobiles. All rights reserved.</p>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
       
       {/* Search Overlay for Mobile Bottom Nav Padding Avoidance */}
       <style dangerouslySetInnerHTML={{

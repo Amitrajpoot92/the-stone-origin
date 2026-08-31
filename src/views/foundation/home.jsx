@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../../components/foundation/home/hero';
 import HomeCategories from '../category/Categories';
 import FeaturedProducts from '../../components/foundation/home/FeaturedProducts';
+import HomeNews from '../../components/foundation/home/HomeNews';
 
 const Home = () => {
   return (
@@ -14,6 +15,9 @@ const Home = () => {
 
       {/* 3. Latest Phones */}
       <FeaturedProducts />
+
+      {/* 4. Latest News */}
+      <HomeNews />
 
     </main>
   );

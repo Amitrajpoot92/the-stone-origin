@@ -82,7 +82,7 @@ const Categories = ({ isHome = false }) => {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh]">
                 <div className="w-32 h-16 mb-4 animate-pulse">
-                     <img src="/phones/24Mobiles-logo.png" alt="Loading" className="w-full h-full object-contain" />
+                     <img src="/phones/gemini-svg.svg" alt="Loading" className="w-full h-full object-contain" />
                 </div>
                 <span className="text-amber-600 font-bold uppercase tracking-widest text-sm animate-pulse">Loading Brands...</span>
             </div>
@@ -90,77 +90,103 @@ const Categories = ({ isHome = false }) => {
     }
 
     return (
-        <div className={`bg-slate-50 ${isHome ? 'py-8 sm:py-16' : 'min-h-[80vh] pt-[60px] sm:pt-[90px] pb-12 sm:pb-24'} font-['Montserrat',sans-serif] text-slate-900`}>
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16">
+        <div className={`bg-slate-50 ${isHome ? 'py-2 sm:py-4' : 'min-h-screen pt-[70px] sm:pt-[80px] pb-12'} font-['Montserrat',sans-serif]`}>
+            <div className="max-w-[1440px] mx-auto">
                 
-                {/* Title Section */}
-                <header className="mb-8 sm:mb-16 text-center flex flex-col items-center">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-[1rem] sm:rounded-[1.5rem] bg-white border border-slate-200 shadow-sm flex items-center justify-center text-amber-500 mb-4 sm:mb-6">
-                        <LayoutGrid size={24} strokeWidth={2.5} className="sm:w-7 sm:h-7" />
-                    </div>
-                    <h2 className="text-2xl sm:text-5xl font-black text-slate-900 tracking-tighter mb-2 sm:mb-4">
-                        Top Brands
-                    </h2>
-                    <p className="text-xs sm:text-base font-bold text-slate-500 uppercase tracking-widest max-w-xl px-4">
-                        Explore our curated selection of premium smartphones by brand.
-                    </p>
-                </header>
+                {isHome ? (
+                    /* HOMEPAGE LAYOUT: Horizontal Scroll */
+                    <>
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-4 sm:px-8 mb-2">
+                            <h2 className="text-[11px] sm:text-[13px] font-black uppercase tracking-wider text-slate-900">Brands</h2>
+                            <button onClick={() => navigate.push('/categories')} className="text-[10px] sm:text-xs font-black text-rose-600 uppercase hover:text-rose-700 transition-colors">
+                                View All
+                            </button>
+                        </div>
 
-                {/* Grid Layout */}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-6 lg:gap-8 mb-8 sm:mb-16 px-1 sm:px-0">
-                    <AnimatePresence mode="popLayout">
-                        {(showAll ? finalCategories : finalCategories.slice(0, visibleLimit)).map((cat, idx) => (
-                            <motion.div
-                                key={cat.id}
-                                layout
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                                whileHover={{ y: -5 }}
-                                onClick={() => navigate.push(cat.path)}
-                                className="w-[calc(33.333%-6px)] sm:w-[calc(33.333%-16px)] lg:w-[calc(25%-24px)] min-w-[100px] max-w-[280px] group cursor-pointer bg-white rounded-xl sm:rounded-[2rem] overflow-hidden flex flex-col shadow-sm border border-slate-200 hover:shadow-2xl hover:border-amber-500/50 transition-all duration-300"
+                        {/* Horizontal Scroll List */}
+                        <div className="flex overflow-x-auto gap-3 sm:gap-6 px-4 sm:px-8 pb-2 snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                            {finalCategories.slice(0, 10).map((cat) => (
+                                <div 
+                                    key={cat.id} 
+                                    onClick={() => navigate.push(cat.path)} 
+                                    className="flex flex-col items-center gap-1 sm:gap-2 cursor-pointer snap-start shrink-0 w-[56px] sm:w-[80px] group"
+                                >
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center p-2.5 sm:p-3 group-hover:shadow-md group-hover:border-amber-500/40 transition-all overflow-hidden shrink-0">
+                                        <img src={cat.img} alt={cat.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                                    </div>
+                                    <span className="text-[9px] sm:text-[11px] font-bold text-slate-700 uppercase w-full text-center group-hover:text-amber-600 transition-colors">{cat.name}</span>
+                                </div>
+                            ))}
+                            {/* More Brands Button */}
+                            {finalCategories.length > 10 && (
+                                <div 
+                                    onClick={() => navigate.push('/categories')} 
+                                    className="flex flex-col items-center gap-1 sm:gap-2 cursor-pointer snap-start shrink-0 w-[56px] sm:w-[80px] group"
+                                >
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-slate-100 border border-slate-200 shadow-sm flex items-center justify-center text-slate-400 group-hover:text-amber-500 group-hover:shadow-md transition-all shrink-0">
+                                        <LayoutGrid size={20} className="sm:w-6 sm:h-6" />
+                                    </div>
+                                    <span className="text-[9px] sm:text-[11px] font-bold text-slate-700 uppercase text-center leading-[1.1] group-hover:text-amber-600 transition-colors">More<br/>Brands</span>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    /* ALL BRANDS PAGE LAYOUT: Grid */
+                    <div className="px-4 sm:px-8">
+                        {/* Compact Page Header */}
+                        <header className="flex items-center gap-3 mb-6 border-b border-slate-200/60 pb-4">
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-amber-500 shrink-0"
                             >
-                                {/* Image Container */}
-                                <div className="w-full aspect-square overflow-hidden bg-slate-50/50 relative p-4 sm:p-10 flex items-center justify-center">
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                    <img
-                                        src={cat.img}
-                                        alt={cat.name}
-                                        className="w-full h-full object-contain drop-shadow-md sm:drop-shadow-xl transition-transform duration-700 group-hover:scale-110 relative z-10"
-                                    />
-                                </div>
-
-                                {/* Text & Action */}
-                                <div className="p-2 sm:p-6 text-center bg-white border-t border-slate-100 flex flex-col items-center justify-center flex-1">
-                                    <h3 className="text-slate-900 font-black text-[10px] sm:text-lg uppercase tracking-widest truncate w-full group-hover:text-amber-600 transition-colors mb-0.5 sm:mb-1">
-                                        {cat.name}
-                                    </h3>
-                                    <p className="text-[7px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-slate-500 transition-colors flex items-center justify-center gap-0.5 sm:gap-1 truncate">
-                                        {cat.sub} <ArrowRight size={10} className="hidden sm:block opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
-                                    </p>
-                                </div>
+                                <LayoutGrid size={20} strokeWidth={2.5} className="sm:w-6 sm:h-6" />
                             </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
+                            <div>
+                                <motion.h1 
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.1 }}
+                                    className="text-sm sm:text-lg font-black text-slate-900 tracking-wider uppercase leading-tight"
+                                >
+                                    All Brands
+                                </motion.h1>
+                                <motion.p 
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="text-[9px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-widest"
+                                >
+                                    Explore smartphones by brand
+                                </motion.p>
+                            </div>
+                        </header>
 
-                {/* Explore More Button */}
-                {!showAll && finalCategories.length > visibleLimit && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-center"
-                    >
-                        <button
-                            onClick={() => setShowAll(true)}
-                            className="bg-amber-500 hover:bg-amber-400 text-white font-black text-[10px] sm:text-sm px-6 py-3 sm:px-10 sm:py-5 rounded-full uppercase tracking-widest transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:-translate-y-1 active:scale-[0.98]"
-                        >
-                            Explore All Brands
-                        </button>
-                    </motion.div>
+                        <div className="flex flex-wrap gap-6 sm:gap-8 justify-start">
+                            <AnimatePresence mode="popLayout">
+                                {finalCategories.map((cat, idx) => (
+                                    <motion.div
+                                        key={cat.id}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.3, delay: idx * 0.03 }}
+                                        onClick={() => navigate.push(cat.path)}
+                                        className="flex flex-col items-center gap-3 cursor-pointer shrink-0 w-[72px] sm:w-[100px] group"
+                                    >
+                                        <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center p-4 sm:p-5 group-hover:shadow-xl group-hover:border-amber-500/50 transition-all overflow-hidden shrink-0">
+                                            <img src={cat.img} alt={cat.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                                        </div>
+                                        <span className="text-[10px] sm:text-xs font-bold text-slate-700 uppercase text-center w-full group-hover:text-amber-600 transition-colors">{cat.name}</span>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+                    </div>
                 )}
-
             </div>
         </div>
     );

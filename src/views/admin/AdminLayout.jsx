@@ -13,7 +13,9 @@ import {
     X,
     Smartphone,
     LogOut,
-    SmartphoneCharging
+    SmartphoneCharging,
+    Image as ImageIcon,
+    Newspaper
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -113,6 +115,8 @@ const AdminLayout = ({children}) => {
         { name: 'Add Phone', id: 'add-product', icon: PlusSquare, path: '/admin/add-product' },
         { name: 'Database', id: 'inventory', icon: Database, path: '/admin/inventory' },
         { name: 'Brands', id: 'categories', icon: Tags, path: '/admin/categories' },
+        { name: 'Posters', id: 'posters', icon: ImageIcon, path: '/admin/posters' },
+        { name: 'News', id: 'news', icon: Newspaper, path: '/admin/news' },
         { name: 'Settings', id: 'settings', icon: Settings, path: '/admin/settings' }
     ];
 
@@ -126,7 +130,7 @@ const AdminLayout = ({children}) => {
                 <div className="p-6 border-b border-white/5">
                     <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate.push('/')}>
                         <div className="flex items-center gap-3">
-                            <img src="/phones/24Mobiles-logo.png" alt="24mobiles Admin" className="h-10 object-contain filter invert opacity-90" />
+                            <img src="/phones/gemini-svg.svg" alt="24mobiles Admin" className="h-10 object-contain filter invert opacity-90" />
                         </div>
                     </div>
                 </div>
@@ -165,7 +169,7 @@ const AdminLayout = ({children}) => {
             {/* ====== Mobile Header & Sidebar ====== */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-white/5 z-50 flex items-center justify-between px-4">
                 <div className="flex items-center gap-2" onClick={() => navigate.push('/')}>
-                    <img src="/phones/24Mobiles-logo.png" alt="24mobiles Admin" className="h-8 object-contain filter invert opacity-90" />
+                    <img src="/phones/gemini-svg.svg" alt="24mobiles Admin" className="h-8 object-contain filter invert opacity-90" />
                 </div>
                 <button 
                     onClick={() => setIsSidebarOpen(true)}
@@ -194,7 +198,7 @@ const AdminLayout = ({children}) => {
                         >
                             <div className="p-4 border-b border-white/5 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <img src="/phones/24Mobiles-logo.png" alt="24mobiles Admin" className="h-10 object-contain filter invert opacity-90" />
+                                    <img src="/phones/gemini-svg.svg" alt="24mobiles Admin" className="h-10 object-contain filter invert opacity-90" />
                                 </div>
                                 <button 
                                     onClick={() => setIsSidebarOpen(false)}

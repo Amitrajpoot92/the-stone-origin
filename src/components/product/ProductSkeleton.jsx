@@ -15,7 +15,7 @@ const ProductSkeleton = () => {
           <div className="space-y-8">
             <div className="aspect-square bg-slate-50 rounded-[3rem] border border-slate-100 flex items-center justify-center overflow-hidden p-12">
               <div className="w-1/2 h-1/2 flex items-center justify-center animate-pulse opacity-40">
-                 <img src="/phones/24Mobiles-logo.png" alt="Loading" className="w-full h-full object-contain filter grayscale" />
+                 <img src="/phones/gemini-svg.svg" alt="Loading" className="w-full h-full object-contain filter grayscale" />
               </div>
             </div>
             

@@ -48,43 +48,44 @@ const FeaturedProducts = () => {
     }
 
     return (
-        <section className="py-8 sm:py-20 bg-white overflow-hidden font-['Montserrat',sans-serif]">
-            <div className="max-w-[1440px] mx-auto px-1 sm:px-10 lg:px-16">
+        <section className="py-2 sm:py-4 bg-slate-50 overflow-hidden font-['Montserrat',sans-serif]">
+            <div className="max-w-[1440px] mx-auto">
                 
-                {/* Header Section */}
-                <div className="mb-6 sm:mb-12 text-center">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-2xl sm:text-5xl lg:text-[56px] font-black text-slate-900 tracking-tight"
+                {/* Compact Header (Matching Brands Section) */}
+                <div className="flex items-center justify-between px-4 sm:px-8 mb-3">
+                    <h2 className="text-[11px] sm:text-[13px] font-black uppercase tracking-wider text-slate-900">Latest Phones</h2>
+                    <button 
+                        onClick={() => navigate.push('/products')} 
+                        className="text-[10px] sm:text-xs font-black text-rose-600 uppercase hover:text-rose-700 transition-colors"
                     >
-                        Latest Phones
-                    </motion.h2>
+                        View All
+                    </button>
                 </div>
 
-                {/* Product Grid */}
-                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-6 lg:gap-8 mb-8 sm:mb-14 px-1 sm:px-0">
+                {/* Product Horizontal Scroll */}
+                <div className="flex overflow-x-auto hide-scrollbar gap-3 sm:gap-6 px-4 sm:px-8 pb-4 snap-x">
                     {products.map((product) => (
-                        <div key={product.id} className="w-[calc(33.333%-4px)] sm:w-[calc(33.333%-16px)] lg:w-[calc(25%-24px)] min-w-[100px] max-w-[280px]">
+                        <div 
+                            key={product.id} 
+                            className="snap-start shrink-0 w-[calc(33.333%-8px)] min-w-[80px] sm:w-[calc(25%-18px)] lg:w-[calc(20%-20px)] max-w-[280px]"
+                        >
                             <ProductCard product={product} />
                         </div>
                     ))}
+                    {/* View All Card / Button at the end of scroll */}
+                    {products.length >= 8 && (
+                        <div 
+                            onClick={() => navigate.push('/products')} 
+                            className="snap-start shrink-0 w-[calc(33.333%-8px)] min-w-[80px] sm:w-[calc(25%-18px)] lg:w-[calc(20%-20px)] max-w-[280px] flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-sm cursor-pointer hover:border-amber-500/50 hover:shadow-md transition-all group"
+                        >
+                            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:text-amber-500 transition-colors mb-3">
+                                <ArrowRight size={20} className="sm:w-6 sm:h-6" />
+                            </div>
+                            <span className="text-[10px] sm:text-xs font-bold text-slate-700 uppercase group-hover:text-amber-600 transition-colors text-center px-2">View All<br/>Phones</span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Footer CTA */}
-                <div className="text-center mt-6">
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => navigate.push('/products')}
-                        className="bg-amber-500 text-slate-900 px-8 py-3.5 sm:px-10 sm:py-4 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider inline-flex items-center gap-3 transition-all shadow-lg hover:shadow-amber-500/40 hover:bg-amber-400 group"
-                    >
-                        Explore All Phones
-                        <ChevronRight size={18} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
-                    </motion.button>
-                </div>
             </div>
         </section>
     );
