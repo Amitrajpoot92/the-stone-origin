@@ -24,9 +24,9 @@ export default function TrendingProducts() {
       }
 
       if (!prodRes.error) {
-        // Filter only products marked as trending
+        // Show trending products, or fallback to latest products if none marked
         const trending = prodRes.products.filter(p => p.isTrending === true);
-        setProducts(trending);
+        setProducts(trending.length > 0 ? trending : prodRes.products.slice(0, 4));
       }
       setLoading(false);
     };
