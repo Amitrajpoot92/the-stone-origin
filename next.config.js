@@ -2,8 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    // If you use remote images, you can add their domains here
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ik.imagekit.io',
+      }
+    ],
   },
   eslint: {
     ignoreDuringBuilds: true,

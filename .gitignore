@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 public/data/locations.json
 .env
-
 .next
+refactor-data.json
+test_auth.mjs
