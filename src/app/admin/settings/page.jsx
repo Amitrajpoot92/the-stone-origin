@@ -100,7 +100,7 @@ export default function SettingsPage() {
               onChange={handleChange}
               rows={3}
               placeholder="e.g. 123 Heritage Lane, Makrana, Rajasthan 341505"
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 resize-none" 
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500 resize-none" 
             />
           </div>
 
@@ -113,7 +113,7 @@ export default function SettingsPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="e.g. +91 98765 43210"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
               />
             </div>
             
@@ -125,7 +125,7 @@ export default function SettingsPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g. namaste@thestoneorigin.com"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function SettingsPage() {
                   value={formData.instagram}
                   onChange={handleChange}
                   placeholder="https://instagram.com/yourpage"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
                 />
               </div>
               <div className="space-y-2">
@@ -152,7 +152,7 @@ export default function SettingsPage() {
                   value={formData.facebook}
                   onChange={handleChange}
                   placeholder="https://facebook.com/yourpage"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
                 />
               </div>
               <div className="space-y-2">
@@ -163,7 +163,7 @@ export default function SettingsPage() {
                   value={formData.twitter}
                   onChange={handleChange}
                   placeholder="https://twitter.com/yourpage"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
                 />
               </div>
               <div className="space-y-2">
@@ -174,7 +174,7 @@ export default function SettingsPage() {
                   value={formData.whatsapp}
                   onChange={handleChange}
                   placeholder="e.g. +919876543210 (include country code)"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
                 />
               </div>
             </div>

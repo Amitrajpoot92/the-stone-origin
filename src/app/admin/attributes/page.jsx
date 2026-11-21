@@ -141,7 +141,7 @@ export default function ManageAttributesPage() {
                 onChange={(e) => setNewValues(prev => ({ ...prev, [key]: e.target.value }))}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddValue(key)}
                 placeholder={placeholder}
-                className="flex-1 px-4 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all text-sm"
+                className="flex-1 px-4 py-2 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 placeholder:text-stone-400 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all text-sm"
               />
               <button
                 onClick={() => handleAddValue(key)}

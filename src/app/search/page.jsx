@@ -34,7 +34,7 @@ export default function SearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search for idols, materials, or collections..."
-              className="w-full bg-white border-2 border-stone-200 rounded-full py-6 pl-16 pr-8 text-lg sm:text-xl font-light focus:outline-none focus:ring-0 focus:border-amber-500 shadow-sm transition-all placeholder:text-stone-300"
+              className="w-full bg-white border-2 border-stone-200 rounded-full py-6 pl-16 pr-8 text-lg sm:text-xl font-light text-stone-900 focus:outline-none focus:ring-0 focus:border-amber-500 shadow-sm transition-all placeholder:text-stone-400"
               autoFocus
             />
             {query && (

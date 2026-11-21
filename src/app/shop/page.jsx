@@ -144,7 +144,7 @@ function ShopContent() {
               else params.set("mainCategory", e.target.value);
               router.replace(`/shop?${params.toString()}`, { scroll: false });
             }}
-            className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+            className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2 px-3 text-sm text-stone-900 focus:ring-2 focus:ring-amber-500 outline-none"
           >
             <option value="all">All Collections</option>
             {mainCategories.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
@@ -157,7 +157,7 @@ function ShopContent() {
             <select 
               value={selectedSubCategory}
               onChange={(e) => setSelectedSubCategory(e.target.value)}
-              className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2 px-3 text-sm text-stone-900 focus:ring-2 focus:ring-amber-500 outline-none"
             >
               <option value="all">All {mainCategories.find(c => c.id === selectedMainCategory)?.title}</option>
               {subCategories.filter(c => c.parentId === selectedMainCategory).map(c => (

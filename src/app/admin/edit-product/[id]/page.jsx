@@ -248,7 +248,7 @@ export default function EditProductPage() {
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g. 2ft Makrana White Ganesha"
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
             />
           </div>
 
@@ -261,7 +261,7 @@ export default function EditProductPage() {
                 value={formData.price}
                 onChange={handleChange}
                 placeholder="e.g. 45000"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
               />
             </div>
 
@@ -273,7 +273,7 @@ export default function EditProductPage() {
                 value={formData.inventory}
                 onChange={handleChange}
                 placeholder="e.g. 10"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
               />
             </div>
             
@@ -293,7 +293,7 @@ export default function EditProductPage() {
                     name="mainCategoryId"
                     value={formData.mainCategoryId}
                     onChange={handleChange}
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
                   >
                     <option value="">Select Main Category</option>
                     {mainCategories.map(mainCat => (
@@ -314,7 +314,7 @@ export default function EditProductPage() {
                     name="subCategoryId"
                     value={formData.subCategoryId}
                     onChange={handleChange}
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
                     disabled={!formData.mainCategoryId}
                   >
                     {categories.filter(c => c.parentId === formData.mainCategoryId).length === 0 ? (
@@ -363,7 +363,7 @@ export default function EditProductPage() {
                 onChange={handleChange}
                 rows={4}
                 placeholder="Detailed description of the carving, heritage, etc."
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 resize-none"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500 resize-none"
               ></textarea>
             </div>
             <div className="space-y-2">
@@ -372,7 +372,7 @@ export default function EditProductPage() {
                 name="size"
                 value={formData.size}
                 onChange={handleChange}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
               >
                 <option value="">Select Size</option>
                 {globalAttributes.sizes?.map(s => <option key={s} value={s}>{s}</option>)}
@@ -385,7 +385,7 @@ export default function EditProductPage() {
                 name="material"
                 value={formData.material}
                 onChange={handleChange}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
               >
                 <option value="">Select Material</option>
                 {globalAttributes.materials?.map(m => <option key={m} value={m}>{m}</option>)}
@@ -405,7 +405,7 @@ export default function EditProductPage() {
                   name="finish"
                   value={formData.finish}
                   onChange={handleChange}
-                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
+                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
                 >
                   <option value="">Select Finish</option>
                   {globalAttributes.finishes?.map(f => <option key={f} value={f}>{f}</option>)}
@@ -418,7 +418,7 @@ export default function EditProductPage() {
                   name="placement"
                   value={formData.placement}
                   onChange={handleChange}
-                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
+                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
                 >
                   <option value="">Select Placement</option>
                   {globalAttributes.placements?.map(p => <option key={p} value={p}>{p}</option>)}
@@ -431,7 +431,7 @@ export default function EditProductPage() {
                   name="theme"
                   value={formData.theme}
                   onChange={handleChange}
-                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
+                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
                 >
                   <option value="">Select Theme</option>
                   {globalAttributes.themes?.map(t => <option key={t} value={t}>{t}</option>)}
@@ -444,7 +444,7 @@ export default function EditProductPage() {
                   name="pose"
                   value={formData.pose}
                   onChange={handleChange}
-                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
+                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
                 >
                   <option value="">Select Pose</option>
                   {globalAttributes.poses?.map(p => <option key={p} value={p}>{p}</option>)}
@@ -457,7 +457,7 @@ export default function EditProductPage() {
                   name="customizable"
                   value={formData.customizable}
                   onChange={handleChange}
-                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
+                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
                 >
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>
@@ -470,7 +470,7 @@ export default function EditProductPage() {
                   name="weatherResistant"
                   value={formData.weatherResistant}
                   onChange={handleChange}
-                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
+                  className="w-full bg-white border border-stone-200 rounded-xl py-2 px-3 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 text-sm appearance-none"
                 >
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>

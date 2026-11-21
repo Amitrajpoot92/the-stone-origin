@@ -179,7 +179,7 @@ export default function AdminCategoriesPage() {
                   name="parentId"
                   value={formData.parentId}
                   onChange={handleChange}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-4 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-4 text-stone-900 focus:outline-none focus:ring-2 focus:border-amber-500 appearance-none"
                 >
                   <option value="">Select Parent Category</option>
                   {mainCategories.map(cat => (
@@ -197,7 +197,7 @@ export default function AdminCategoriesPage() {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="e.g. Makrana Marble"
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-4 focus:outline-none focus:ring-2 focus:border-amber-500" 
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:border-amber-500" 
               />
             </div>
 

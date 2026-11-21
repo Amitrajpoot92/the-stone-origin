@@ -21,20 +21,54 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1c1917;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
 }
 
 body {
-  color: var(--foreground);
+  color: #1c1917;
   background: var(--background);
   font-family: var(--font-sans);
+}
+
+/* Global Form Input Text Color Safeguards */
+input,
+textarea,
+select {
+  color: #1c1917 !important;
+  caret-color: #d97706 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #a8a29e !important;
+  opacity: 1 !important;
+}
+
+/* Fix browser autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #1c1917 !important;
+  box-shadow: 0 0 0px 1000px #f5f5f4 inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #f5f5f4 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+option {
+  color: #1c1917 !important;
+  background-color: #ffffff !important;
 }
 
 .glass-panel {

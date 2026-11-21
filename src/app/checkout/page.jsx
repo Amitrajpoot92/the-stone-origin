@@ -498,7 +498,7 @@ export default function CheckoutPage() {
                         value={formData.firstName} 
                         onChange={handleChange} 
                         placeholder="e.g. Ramesh"
-                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                       />
                     </div>
                     <div>
@@ -509,7 +509,7 @@ export default function CheckoutPage() {
                         value={formData.lastName} 
                         onChange={handleChange} 
                         placeholder="e.g. Sharma"
-                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                       />
                     </div>
                   </div>
@@ -528,7 +528,7 @@ export default function CheckoutPage() {
                           value={formData.phone} 
                           onChange={handleChange} 
                           placeholder="9876543210"
-                          className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-12 pr-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                          className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-12 pr-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                         />
                       </div>
                     </div>
@@ -542,7 +542,7 @@ export default function CheckoutPage() {
                         value={formData.email} 
                         onChange={handleChange} 
                         placeholder="name@example.com"
-                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                       />
                     </div>
                   </div>
@@ -556,7 +556,7 @@ export default function CheckoutPage() {
                       value={formData.address} 
                       onChange={handleChange} 
                       placeholder="House/Flat No., Building Name, Street / Landmark"
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                     />
                   </div>
 
@@ -570,7 +570,7 @@ export default function CheckoutPage() {
                         value={formData.city} 
                         onChange={handleChange} 
                         placeholder="e.g. Jaipur"
-                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                       />
                     </div>
                     <div>
@@ -582,7 +582,7 @@ export default function CheckoutPage() {
                         value={formData.state} 
                         onChange={handleChange} 
                         placeholder="e.g. Rajasthan"
-                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                       />
                     </div>
                     <div className="col-span-2 sm:col-span-1">
@@ -596,7 +596,7 @@ export default function CheckoutPage() {
                         value={formData.pincode} 
                         onChange={handleChange} 
                         placeholder="6 Digits (e.g. 302001)"
-                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
+                        className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 px-4 text-base text-stone-900 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400" 
                       />
                     </div>
                   </div>

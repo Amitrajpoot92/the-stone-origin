@@ -163,22 +163,22 @@ export default function ContactPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-stone-700">First Name *</label>
-                  <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
+                  <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-stone-700">Last Name</label>
-                  <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
+                  <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-stone-700">Email Address</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-stone-700">Inquiry Type</label>
-                <select name="inquiryType" value={formData.inquiryType} onChange={handleChange} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-stone-600 appearance-none">
+                <select name="inquiryType" value={formData.inquiryType} onChange={handleChange} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-stone-900 appearance-none">
                   <option value="General Inquiry">General Inquiry</option>
                   <option value="Order Status">Order Status</option>
                   <option value="Custom Idol Request">Custom Idol Request</option>
@@ -188,7 +188,7 @@ export default function ContactPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-stone-700">Message *</label>
-                <textarea name="message" value={formData.message} onChange={handleChange} required rows={5} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"></textarea>
+                <textarea name="message" value={formData.message} onChange={handleChange} required rows={5} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"></textarea>
               </div>
 
               <button type="submit" className="w-full bg-[#25D366] hover:bg-[#1DA851] text-white rounded-xl py-4 flex items-center justify-center gap-2 font-medium transition-colors shadow-lg shadow-green-900/10 mt-4">

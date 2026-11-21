@@ -237,11 +237,11 @@ export default function ProfilePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1.5">Full Name</label>
-                <input type="text" required value={settingsForm.displayName} onChange={(e) => setSettingsForm({...settingsForm, displayName: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
+                <input type="text" required value={settingsForm.displayName} onChange={(e) => setSettingsForm({...settingsForm, displayName: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1.5">Phone Number</label>
-                <input type="tel" value={settingsForm.phone} onChange={(e) => setSettingsForm({...settingsForm, phone: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
+                <input type="tel" value={settingsForm.phone} onChange={(e) => setSettingsForm({...settingsForm, phone: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 px-4 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all" />
               </div>
               <div className="pt-2">
                 <button type="submit" disabled={saving} className="bg-stone-900 hover:bg-amber-600 text-white rounded-xl py-3 px-6 text-sm font-medium transition-colors shadow-lg shadow-stone-900/10 flex items-center gap-2">
@@ -292,33 +292,33 @@ export default function ProfilePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-medium text-stone-500 mb-1">Address Title (e.g. Home, Office)</label>
-                      <input required type="text" value={addressForm.title} onChange={e => setAddressForm({...addressForm, title: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                      <input required type="text" value={addressForm.title} onChange={e => setAddressForm({...addressForm, title: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-stone-500 mb-1">Full Name</label>
-                      <input required type="text" value={addressForm.name} onChange={e => setAddressForm({...addressForm, name: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                      <input required type="text" value={addressForm.name} onChange={e => setAddressForm({...addressForm, name: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-stone-500 mb-1">Phone Number</label>
-                    <input required type="tel" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                    <input required type="tel" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-stone-500 mb-1">Full Address</label>
-                    <input required type="text" value={addressForm.address} onChange={e => setAddressForm({...addressForm, address: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                    <input required type="text" value={addressForm.address} onChange={e => setAddressForm({...addressForm, address: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-medium text-stone-500 mb-1">City</label>
-                      <input required type="text" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                      <input required type="text" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-stone-500 mb-1">State</label>
-                      <input required type="text" value={addressForm.state} onChange={e => setAddressForm({...addressForm, state: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                      <input required type="text" value={addressForm.state} onChange={e => setAddressForm({...addressForm, state: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-stone-500 mb-1">PIN Code</label>
-                      <input required type="text" value={addressForm.pincode} onChange={e => setAddressForm({...addressForm, pincode: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
+                      <input required type="text" value={addressForm.pincode} onChange={e => setAddressForm({...addressForm, pincode: e.target.value})} className="w-full bg-stone-50 border border-stone-200 rounded-lg py-2.5 px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" />
                     </div>
                   </div>
                   <div className="pt-2 flex gap-3">
