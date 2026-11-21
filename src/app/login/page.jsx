@@ -4,13 +4,14 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Flower2, Mail, Lock, User, Loader2 } from "lucide-react";
+import { ArrowRight, Flower2, Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
 import { loginWithEmail, registerWithEmail, loginWithGoogle } from "@/lib/auth-helpers";
 import { useAuth } from "@/context/AuthContext";
 
 function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
@@ -190,14 +191,26 @@ function LoginContent() {
                   <Lock size={18} strokeWidth={1.5} />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Password"
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-12 pr-4 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-12 pr-12 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-stone-400 hover:text-stone-700 transition-colors focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff size={18} strokeWidth={1.5} />
+                  ) : (
+                    <Eye size={18} strokeWidth={1.5} />
+                  )}
+                </button>
               </div>
 
               {error && (
